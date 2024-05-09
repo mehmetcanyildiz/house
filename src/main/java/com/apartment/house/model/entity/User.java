@@ -2,18 +2,16 @@ package com.apartment.house.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 
 @Data
 @Entity
-@Table(name = "user")
-public class User {
-    @Id
-    @Column(name = "user_id")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    private String id;
-
+@Table(name = "users", indexes = {@Index(name = "idx_email_phone", columnList = "email, phone")})
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -28,4 +26,5 @@ public class User {
 
     @Column(name = "phone", nullable = false, length = 10)
     private String phone;
+
 }
