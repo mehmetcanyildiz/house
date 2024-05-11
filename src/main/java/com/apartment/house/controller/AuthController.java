@@ -5,29 +5,36 @@ import com.apartment.house.model.dto.auth.LoginResponseDTO;
 import com.apartment.house.model.dto.auth.RegisterRequestDTO;
 import com.apartment.house.model.dto.auth.RegisterResponseDTO;
 import com.apartment.house.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginDTO) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO) {
         LoginResponseDTO response = authService.login(loginDTO);
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO registerDTO) {
+    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
         RegisterResponseDTO response = authService.register(registerDTO);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/activate-account")
+    public void confirmEmail(@RequestParam("token") String token) throws MessagingException {
+        authService.activateAccount(token);
     }
 
 }

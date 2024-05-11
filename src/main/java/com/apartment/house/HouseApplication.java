@@ -5,8 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@EnableJpaAuditing
+@EnableAsync
+@SpringBootApplication
 public class HouseApplication {
 
     public static void main(String[] args) {
