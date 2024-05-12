@@ -37,8 +37,10 @@ public class AuthService {
     LoginResponseDTO response = new LoginResponseDTO();
     userService.validateUserByEmail(loginRequestDTO.getEmail());
     var auth = autenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),
-            loginRequestDTO.getPassword()));
+        new UsernamePasswordAuthenticationToken(
+            loginRequestDTO.getEmail(),
+            loginRequestDTO.getPassword()
+        ));
     var claims = new HashMap<String, Object>();
     var user = ((UserModel) auth.getPrincipal());
     if (user.getStatus() != StatusEnum.ACTIVE) {
@@ -94,8 +96,7 @@ public class AuthService {
         user.getEmail(),
         user.getFirstName(),
         EmailTemplateNameEnum.ACTIVATION_EMAIL,
-        activationUrl,
-        (String) newToken,
+        activationUrl, (String) newToken,
         "Account activation"
     );
   }

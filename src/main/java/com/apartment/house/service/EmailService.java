@@ -35,7 +35,9 @@ public class EmailService {
 
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-        MimeMessageHelper.MULTIPART_MODE_MIXED, UTF_8.name());
+                                                     MimeMessageHelper.MULTIPART_MODE_MIXED,
+                                                     UTF_8.name()
+    );
 
     Map<String, Object> model = new HashMap<>();
     model.put("username", username);

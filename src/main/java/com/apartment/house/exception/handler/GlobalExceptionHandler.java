@@ -22,10 +22,10 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-            .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getCode())
-            .businessErrorDescription(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getDescription())
-            .error(e.getMessage())
-            .build());
+                  .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getCode())
+                  .businessErrorDescription(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getDescription())
+                  .error(e.getMessage())
+                  .build());
   }
 
   @ExceptionHandler(DisabledException.class)
@@ -33,10 +33,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-            .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_DISABLED.getCode())
-            .businessErrorDescription(BusinessErrorCodesEnum.ACCOUNT_DISABLED.getDescription())
-            .error(e.getMessage())
-            .build());
+                  .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_DISABLED.getCode())
+                  .businessErrorDescription(
+                      BusinessErrorCodesEnum.ACCOUNT_DISABLED.getDescription())
+                  .error(e.getMessage())
+                  .build());
   }
 
   @ExceptionHandler(BadCredentialsException.class)
@@ -44,10 +45,10 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-            .businessErrorCode(BusinessErrorCodesEnum.BAD_CREDENTIALS.getCode())
-            .businessErrorDescription(BusinessErrorCodesEnum.BAD_CREDENTIALS.getDescription())
-            .error(e.getMessage())
-            .build());
+                  .businessErrorCode(BusinessErrorCodesEnum.BAD_CREDENTIALS.getCode())
+                  .businessErrorDescription(BusinessErrorCodesEnum.BAD_CREDENTIALS.getDescription())
+                  .error(e.getMessage())
+                  .build());
   }
 
   @ExceptionHandler(MessagingException.class)
@@ -85,9 +86,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(ExceptionResponse.builder()
-            .businessErrorDescription("Internal error, contact the admin")
-            .error(e.getMessage())
-            .build()
+                  .businessErrorDescription("Internal error, contact the admin")
+                  .error(e.getMessage())
+                  .build()
         );
   }
 }
