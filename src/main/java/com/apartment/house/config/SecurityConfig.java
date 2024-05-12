@@ -1,6 +1,7 @@
 package com.apartment.house.config;
 
 import com.apartment.house.service.JwtFilterService;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ public class SecurityConfig {
   private final AuthenticationProvider authenticationProvider;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws ExpiredJwtException,Exception  {
     http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             authorizeRequests -> authorizeRequests.requestMatchers(

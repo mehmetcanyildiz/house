@@ -1,6 +1,7 @@
 package com.apartment.house.exception.handler;
 
 import com.apartment.house.enums.BusinessErrorCodesEnum;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,14 +9,15 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
+
 
   @ExceptionHandler(LockedException.class)
   public ResponseEntity<ExceptionResponse> handleException(LockedException e) {
@@ -55,6 +57,17 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ExceptionResponse> handleException(MessagingException e) {
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(
+            ExceptionResponse.builder()
+                .error(e.getMessage())
+                .build()
+        );
+  }
+
+  @ExceptionHandler(ExpiredJwtException.class)
+  public ResponseEntity<ExceptionResponse> handleException(ExpiredJwtException e) {
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
         .body(
             ExceptionResponse.builder()
                 .error(e.getMessage())

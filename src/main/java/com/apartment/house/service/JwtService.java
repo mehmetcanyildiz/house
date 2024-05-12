@@ -2,9 +2,11 @@ package com.apartment.house.service;
 
 import com.apartment.house.config.ApplicationConfig;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,39 +23,48 @@ public class JwtService {
 
   private final ApplicationConfig applicationConfig;
 
-  public String generateToken(HashMap<String, Object> claims, UserDetails userDetails) {
+  public String generateToken(HashMap<String, Object> claims, UserDetails userDetails)
+      throws ExpiredJwtException {
     return buildToken(claims, userDetails, applicationConfig.jwtExpiration);
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
+  public boolean isTokenValid(String token, UserDetails userDetails) throws ExpiredJwtException {
     final String username = extractUsername(token);
     return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
   }
 
-  public String extractUsername(String token) {
+  public String extractUsername(String token) throws ExpiredJwtException {
     return extractClaim(token, Claims::getSubject);
   }
 
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver)
+      throws ExpiredJwtException {
     final Claims claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
   }
 
-  private Claims extractAllClaims(String token) {
-    return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
-        .getBody();
+  private Claims extractAllClaims(String token) throws ExpiredJwtException, SignatureException {
+    try {
+      return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
+          .getBody();
+    } catch (ExpiredJwtException e) {
+      System.out.println(" Token expired ");
+    } catch (Exception e) {
+      System.out.println(" Some other exception in JWT parsing ");
+    }
+    throw new ExpiredJwtException(null, null, "Token expired");
   }
 
-  private boolean isTokenExpired(String token) {
+  public boolean isTokenExpired(String token) throws ExpiredJwtException {
     return extractExpiration(token).before(new Date());
   }
 
-  private Date extractExpiration(String token) {
+  private Date extractExpiration(String token) throws ExpiredJwtException {
     return extractClaim(token, Claims::getExpiration);
   }
 
   private String buildToken(HashMap<String, Object> claims, UserDetails userDetails,
-      long jwtExpiration) {
+      long jwtExpiration) throws ExpiredJwtException {
     var authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
         .toList();
 

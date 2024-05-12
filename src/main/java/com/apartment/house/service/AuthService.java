@@ -9,6 +9,7 @@ import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.enums.EmailTemplateNameEnum;
 import com.apartment.house.enums.StatusEnum;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class AuthService {
   private final TokenService tokenService;
 
   @SneakyThrows
-  public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+  public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) throws ExpiredJwtException {
     LoginResponseDTO response = new LoginResponseDTO();
     userService.validateUserByEmail(loginRequestDTO.getEmail());
     var auth = autenticationManager.authenticate(
@@ -63,9 +64,8 @@ public class AuthService {
     return response;
   }
 
-  @SneakyThrows
   @Transactional
-  public RegisterResponseDTO register(RegisterRequestDTO registerDTO) {
+  public RegisterResponseDTO register(RegisterRequestDTO registerDTO) throws Exception {
     RegisterResponseDTO response = new RegisterResponseDTO();
     userService.validateRegister(registerDTO);
     UserModel user = userService.register(registerDTO);

@@ -4,7 +4,10 @@ import com.apartment.house.dto.auth.LoginRequestDTO;
 import com.apartment.house.dto.auth.LoginResponseDTO;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
 import com.apartment.house.dto.auth.RegisterResponseDTO;
+import com.apartment.house.exception.handler.GlobalExceptionHandler;
 import com.apartment.house.service.AuthService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +23,7 @@ public class AuthController {
 
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO)
-      throws MessagingException {
+  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO) throws ExpiredJwtException {
     LoginResponseDTO response = authService.login(loginDTO);
 
     return ResponseEntity.ok(response);
@@ -29,7 +31,7 @@ public class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerDTO)
-      throws MessagingException {
+      throws Exception {
     RegisterResponseDTO response = authService.register(registerDTO);
 
     return ResponseEntity.ok(response);
