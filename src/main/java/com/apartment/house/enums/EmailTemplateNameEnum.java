@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public enum EmailTemplateNameEnum {
-    ACTIVATION_EMAIL("activation_account");
+  ACTIVATION_EMAIL("activation_account");
 
-    private final String value;
+  private final String value;
 
-    EmailTemplateNameEnum(String value) {
-        this.value = value;
-    }
+  EmailTemplateNameEnum(String value) {
+    this.value = value;
+  }
 }

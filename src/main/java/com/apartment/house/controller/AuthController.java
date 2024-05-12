@@ -16,25 +16,28 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO) throws MessagingException {
-        LoginResponseDTO response = authService.login(loginDTO);
 
-        return ResponseEntity.ok(response);
-    }
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO)
+      throws MessagingException {
+    LoginResponseDTO response = authService.login(loginDTO);
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerDTO) throws MessagingException {
-        RegisterResponseDTO response = authService.register(registerDTO);
+    return ResponseEntity.ok(response);
+  }
 
-        return ResponseEntity.ok(response);
-    }
+  @PostMapping("/register")
+  public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestDTO registerDTO)
+      throws MessagingException {
+    RegisterResponseDTO response = authService.register(registerDTO);
 
-    @GetMapping("/activate-account")
-    public void confirmEmail(@RequestParam("token") String token) throws MessagingException {
-        authService.activateAccount(token);
-    }
+    return ResponseEntity.ok(response);
+  }
+
+  @GetMapping("/activate-account")
+  public void confirmEmail(@RequestParam("token") String token) throws MessagingException {
+    authService.activateAccount(token);
+  }
 
 }

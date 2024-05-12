@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface TokenRepository extends JpaRepository<TokenModel, String> {
 
-    Optional<TokenModel> findByToken(String token);
-    Optional<TokenModel> findByUser(UserModel user);
+  Optional<TokenModel> findByToken(String token);
+
+  Optional<TokenModel> findByUser(UserModel user);
 }

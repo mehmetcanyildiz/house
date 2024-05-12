@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @GetMapping("/update")
-    public ResponseEntity<?> update() {
-        return ResponseEntity.ok("response");
-    }
+  @GetMapping("/update")
+  public ResponseEntity<?> update() {
+    return ResponseEntity.ok("response");
+  }
 }

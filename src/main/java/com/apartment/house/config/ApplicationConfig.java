@@ -4,18 +4,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ApplicationConfig
-{
-    @Value("${secret.key}")
-    public String secretKey;
+public class ApplicationConfig {
 
-    @Value("${jwt.expiration}")
-    public Integer jwtExpiration;
+  @Value("${secret.key}")
+  public String secretKey;
 
-    @Value("${mail.from}")
-    public String mailFrom;
+  @Value("${jwt.expiration}")
+  public Integer jwtExpiration;
 
-    @Value("${base.url}")
-    public String baseUrl;
+  @Value("${mail.from}")
+  public String mailFrom;
+
+  @Value("${base.url}")
+  public String baseUrl;
 
 }

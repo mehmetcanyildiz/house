@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class LoginResponseDTO {
-    private boolean status = false;
-    private String message;
-    private String token;
+
+  private boolean status = false;
+  private String message;
+  private String token;
 }

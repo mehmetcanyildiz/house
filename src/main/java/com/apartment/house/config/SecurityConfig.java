@@ -20,31 +20,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-    private final JwtFilterService jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+  private final JwtFilterService jwtAuthFilter;
+  private final AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers(
-                                        "/api/auth/**",
-                                        "/swagger-resources",
-                                        "/swagger-resources/**",
-                                        "/swagger-ui.html",
-                                        "/v2/api-docs",
-                                        "/v2/api-docs/**",
-                                        "/webjars/**",
-                                        "/swagger-ui/**"
-                                ).permitAll()
-                                .anyRequest().authenticated()
-                ).sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(
+            authorizeRequests -> authorizeRequests.requestMatchers("/api/auth/**",
+                    "/swagger-resources", "/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs",
+                    "/v2/api-docs/**", "/webjars/**", "/swagger-ui/**").permitAll().anyRequest()
+                .authenticated()).sessionManagement(
+            sessionManagement -> sessionManagement.sessionCreationPolicy(
+                SessionCreationPolicy.STATELESS)).authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+  }
 
 }

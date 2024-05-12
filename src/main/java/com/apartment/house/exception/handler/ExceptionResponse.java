@@ -15,9 +15,10 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ExceptionResponse {
-    private Integer businessErrorCode;
-    private String businessErrorDescription;
-    private String error;
-    private Set<String> validationErrors;
-    private Map<String, String> errors;
+
+  private Integer businessErrorCode;
+  private String businessErrorDescription;
+  private String error;
+  private Set<String> validationErrors;
+  private Map<String, String> errors;
 }

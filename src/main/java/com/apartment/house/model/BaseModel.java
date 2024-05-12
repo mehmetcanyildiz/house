@@ -8,25 +8,26 @@ import java.util.Date;
 @Data
 @MappedSuperclass
 public abstract class BaseModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at", insertable = false)
-    private Date updatedAt;
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private Date createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-    }
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "updated_at", insertable = false)
+  private Date updatedAt;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
-    }
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = new Date();
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    this.updatedAt = new Date();
+  }
 }
