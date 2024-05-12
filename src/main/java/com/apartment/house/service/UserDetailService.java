@@ -1,4 +1,4 @@
-package com.apartment.house.security;
+package com.apartment.house.service;
 
 
 import com.apartment.house.repository.UserRepository;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 

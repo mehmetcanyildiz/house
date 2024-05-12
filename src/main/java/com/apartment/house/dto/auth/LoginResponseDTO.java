@@ -1,4 +1,4 @@
-package com.apartment.house.model.dto.auth;
+package com.apartment.house.dto.auth;
 
 import lombok.Data;
 

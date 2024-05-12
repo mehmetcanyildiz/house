@@ -1,4 +1,4 @@
-package com.apartment.house.model.enums;
+package com.apartment.house.enums;
 
 import lombok.Getter;
 

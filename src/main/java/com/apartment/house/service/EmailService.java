@@ -1,7 +1,7 @@
 package com.apartment.house.service;
 
 import com.apartment.house.config.ApplicationConfig;
-import com.apartment.house.model.enums.EmailTemplateNameEnum;
+import com.apartment.house.enums.EmailTemplateNameEnum;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

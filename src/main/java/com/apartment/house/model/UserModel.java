@@ -1,6 +1,6 @@
-package com.apartment.house.model.entity;
+package com.apartment.house.model;
 
-import com.apartment.house.model.enums.StatusEnum;
+import com.apartment.house.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "users", indexes = {@Index(name = "idx_email_phone", columnList = "email, phone")})
 @EqualsAndHashCode(callSuper = true)
-public class User extends BaseEntity implements UserDetails {
+public class UserModel extends BaseModel implements UserDetails {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 

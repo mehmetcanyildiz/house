@@ -1,4 +1,4 @@
-package com.apartment.house.security;
+package com.apartment.house.service;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtFilterService extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailService;
 

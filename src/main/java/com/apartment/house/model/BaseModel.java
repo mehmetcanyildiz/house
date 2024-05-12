@@ -1,4 +1,4 @@
-package com.apartment.house.model.entity;
+package com.apartment.house.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

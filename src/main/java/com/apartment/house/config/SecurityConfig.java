@@ -1,5 +1,6 @@
-package com.apartment.house.security;
+package com.apartment.house.config;
 
+import com.apartment.house.service.JwtFilterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-    private final JwtFilter jwtAuthFilter;
+    private final JwtFilterService jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean

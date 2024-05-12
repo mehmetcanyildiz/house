@@ -1,14 +1,14 @@
 package com.apartment.house.repository;
 
-import com.apartment.house.model.entity.User;
+import com.apartment.house.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByEmail(String email);
+public interface UserRepository extends JpaRepository<UserModel, String> {
+    Optional<UserModel> findByEmail(String email);
 
     boolean existsByEmail(String email);
 

@@ -1,9 +1,8 @@
-package com.apartment.house.security;
+package com.apartment.house.service;
 
 import com.apartment.house.config.ApplicationConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,10 @@ import java.util.function.Function;
 public class JwtService {
 
     private final ApplicationConfig applicationConfig;
+
+    public String generateToken(HashMap<String, Object> claims, UserDetails userDetails) {
+        return buildToken(claims, userDetails, applicationConfig.jwtExpiration);
+    }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
@@ -46,10 +49,6 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
-    }
-
-    public String generateToken(HashMap<String, Object> claims, UserDetails userDetails) {
-        return buildToken(claims, userDetails, applicationConfig.jwtExpiration);
     }
 
     private String buildToken(HashMap<String, Object> claims, UserDetails userDetails, long jwtExpiration) {
