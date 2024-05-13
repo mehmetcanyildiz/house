@@ -2,14 +2,12 @@ package com.apartment.house.model;
 
 import com.apartment.house.enums.TokenTypeEnum;
 import jakarta.persistence.Column;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

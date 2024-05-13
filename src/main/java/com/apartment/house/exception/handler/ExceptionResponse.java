@@ -1,13 +1,12 @@
 package com.apartment.house.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Map;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
-import java.util.Set;
 
 @Data
 @Builder

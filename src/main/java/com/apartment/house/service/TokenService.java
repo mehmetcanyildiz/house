@@ -4,13 +4,12 @@ import com.apartment.house.enums.TokenTypeEnum;
 import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.TokenRepository;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor

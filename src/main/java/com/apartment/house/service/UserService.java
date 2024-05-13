@@ -3,12 +3,11 @@ package com.apartment.house.service;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.UserRepository;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

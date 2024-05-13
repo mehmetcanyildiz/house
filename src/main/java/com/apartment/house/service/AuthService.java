@@ -11,25 +11,23 @@ import com.apartment.house.dto.auth.PasswordResetRequestDTO;
 import com.apartment.house.dto.auth.PasswordResetResponseDTO;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
 import com.apartment.house.dto.auth.RegisterResponseDTO;
+import com.apartment.house.enums.EmailTemplateNameEnum;
+import com.apartment.house.enums.StatusEnum;
 import com.apartment.house.enums.TokenTypeEnum;
 import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
-import com.apartment.house.enums.EmailTemplateNameEnum;
-import com.apartment.house.enums.StatusEnum;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
+import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import lombok.SneakyThrows;
-
-import java.time.LocalDateTime;
-import java.util.HashMap;
 
 
 @Service

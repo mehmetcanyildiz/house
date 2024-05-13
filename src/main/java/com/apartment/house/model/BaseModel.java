@@ -1,9 +1,16 @@
 package com.apartment.house.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.util.Date;
+import lombok.Data;
 
 @Data
 @MappedSuperclass

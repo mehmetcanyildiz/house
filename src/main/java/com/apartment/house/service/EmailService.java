@@ -1,9 +1,13 @@
 package com.apartment.house.service;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.apartment.house.config.ApplicationConfig;
 import com.apartment.house.enums.EmailTemplateNameEnum;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,11 +15,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 @Service
@@ -34,9 +33,10 @@ public class EmailService {
         !emailTemplateName.getValue().isEmpty() ? emailTemplateName.getValue() : "confirm-email";
 
     MimeMessage mimeMessage = mailSender.createMimeMessage();
-    MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-                                                     MimeMessageHelper.MULTIPART_MODE_MIXED,
-                                                     UTF_8.name()
+    MimeMessageHelper helper = new MimeMessageHelper(
+        mimeMessage,
+        MimeMessageHelper.MULTIPART_MODE_MIXED,
+        UTF_8.name()
     );
 
     Map<String, Object> model = new HashMap<>();

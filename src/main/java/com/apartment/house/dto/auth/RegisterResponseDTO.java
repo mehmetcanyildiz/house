@@ -1,8 +1,7 @@
 package com.apartment.house.dto.auth;
 
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class RegisterResponseDTO {

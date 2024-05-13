@@ -1,17 +1,16 @@
 package com.apartment.house.controller;
 
-import io.jsonwebtoken.ExpiredJwtException;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
   @GetMapping("/update")
-  public ResponseEntity<?> update(){
+  public ResponseEntity<?> update() {
     return ResponseEntity.ok("response");
   }
 }

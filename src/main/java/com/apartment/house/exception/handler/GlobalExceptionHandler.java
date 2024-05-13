@@ -3,6 +3,8 @@ package com.apartment.house.exception.handler;
 import com.apartment.house.enums.BusinessErrorCodesEnum;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,9 +13,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
