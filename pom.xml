@@ -11,9 +11,9 @@
   </parent>
   <groupId>com.apartment</groupId>
   <artifactId>house</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>house</name>
-  <description>Demo project for Spring Boot</description>
+  <description>Apartment House Project API</description>
   <properties>
     <java.version>17</java.version>
   </properties>
@@ -95,10 +95,10 @@
       <version>8.0.0.Final</version>
     </dependency>
     <dependency>
-    <groupId>javax.annotation</groupId>
-    <artifactId>javax.annotation-api</artifactId>
-    <version>1.3.2</version>
-  </dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+      <version>1.3.2</version>
+    </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
