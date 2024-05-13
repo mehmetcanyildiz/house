@@ -6,5 +6,6 @@ import lombok.Data;
 public class PasswordResetClientResponseDTO {
 
   private boolean status = false;
+  private String email;
   private String message;
 }

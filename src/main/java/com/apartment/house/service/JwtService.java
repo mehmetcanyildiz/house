@@ -1,6 +1,7 @@
 package com.apartment.house.service;
 
 import com.apartment.house.config.ApplicationConfig;
+import com.apartment.house.dto.auth.LogoutRequestDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -10,6 +11,8 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private final ApplicationConfig applicationConfig;
+  private final Set<String> blacklist = new HashSet<>();
 
   public String generateToken(HashMap<String, Object> claims, UserDetails userDetails)
       throws ExpiredJwtException {
@@ -51,6 +55,14 @@ public class JwtService {
     return extractExpiration(token).before(new Date());
   }
 
+  public void addToBlacklist(String token) {
+    blacklist.add(token);
+  }
+
+  public boolean isBlacklisted(String token) {
+    return blacklist.contains(token);
+  }
+
   private Date extractExpiration(String token) throws ExpiredJwtException {
     return extractClaim(token, Claims::getExpiration);
   }
@@ -66,9 +78,24 @@ public class JwtService {
         .signWith(getSigningKey()).compact();
   }
 
+
   private Key getSigningKey() {
     byte[] keyBytes = Decoders.BASE64.decode(applicationConfig.secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
 
+  public void addBlackListToken(LogoutRequestDTO logoutRequestDTO) {
+    String token = logoutRequestDTO.getToken();
+    String userEmail = extractUsername(token);
+    if (userEmail == null) {
+      throw new RuntimeException("User logged not found");
+    }
+    if (token == null) {
+      throw new RuntimeException("Token not found");
+    }
+    if (isBlacklisted(token)) {
+      throw new RuntimeException("User already logout");
+    }
+    addToBlacklist(token);
+  }
 }

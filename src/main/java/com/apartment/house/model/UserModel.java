@@ -1,5 +1,6 @@
 package com.apartment.house.model;
 
+import com.apartment.house.enums.RoleEnum;
 import com.apartment.house.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,9 @@ public class UserModel extends BaseModel implements UserDetails {
 
   @Column(name = "phone", nullable = false, length = 10)
   private String phone;
+
+  @Column(name = "role", nullable = false)
+  private RoleEnum role;
 
   @Column(name = "status", nullable = false)
   private StatusEnum status = StatusEnum.INACTIVE;

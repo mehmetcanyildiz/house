@@ -1,6 +1,7 @@
 package com.apartment.house.service;
 
 import com.apartment.house.dto.auth.RegisterRequestDTO;
+import com.apartment.house.enums.RoleEnum;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.UserRepository;
 import java.util.Optional;
@@ -44,6 +45,7 @@ public class UserService {
     user.setLastName(registerDTO.getLastname());
     user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
     user.setPhone(registerDTO.getPhone());
+    user.setRole(RoleEnum.USER);
 
     return user;
   }

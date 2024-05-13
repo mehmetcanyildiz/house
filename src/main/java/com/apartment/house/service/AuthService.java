@@ -5,6 +5,8 @@ import com.apartment.house.dto.auth.ActivateAccountRequestDTO;
 import com.apartment.house.dto.auth.ActivateAccountResponseDTO;
 import com.apartment.house.dto.auth.LoginRequestDTO;
 import com.apartment.house.dto.auth.LoginResponseDTO;
+import com.apartment.house.dto.auth.LogoutRequestDTO;
+import com.apartment.house.dto.auth.LogoutResponseDTO;
 import com.apartment.house.dto.auth.PasswordResetClientRequestDTO;
 import com.apartment.house.dto.auth.PasswordResetClientResponseDTO;
 import com.apartment.house.dto.auth.PasswordResetRequestDTO;
@@ -103,6 +105,7 @@ public class AuthService {
 
     ActivateAccountResponseDTO response = new ActivateAccountResponseDTO();
     response.setStatus(true);
+    response.setEmail(user.getEmail());
     response.setMessage("Account activated successfully");
     return response;
   }
@@ -114,6 +117,7 @@ public class AuthService {
     UserModel user = userService.findUserByEmail(resetRequestDTO.getEmail());
     sendResetPasswordEmail(user);
     response.setStatus(true);
+    response.setEmail(user.getEmail());
     response.setMessage("Password reset link sent to your email");
 
     return response;
@@ -146,6 +150,7 @@ public class AuthService {
 
     PasswordResetResponseDTO response = new PasswordResetResponseDTO();
     response.setStatus(true);
+    response.setEmail(user.getEmail());
     response.setMessage("Password reset successfully");
     return response;
   }
@@ -194,5 +199,16 @@ public class AuthService {
     tokenService.save(tokenModel);
 
     return generatedToken;
+  }
+
+  public LogoutResponseDTO logout(LogoutRequestDTO logoutRequestDTO) {
+    LogoutResponseDTO response = new LogoutResponseDTO();
+    String userEmail = jwtService.extractUsername(logoutRequestDTO.getToken());
+    jwtService.addBlackListToken(logoutRequestDTO);
+    response.setStatus(true);
+    response.setEmail(userEmail);
+    response.setMessage("User logged out successfully");
+
+    return response;
   }
 }

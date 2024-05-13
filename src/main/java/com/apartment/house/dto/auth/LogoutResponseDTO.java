@@ -3,7 +3,7 @@ package com.apartment.house.dto.auth;
 import lombok.Data;
 
 @Data
-public class ActivateAccountResponseDTO {
+public class LogoutResponseDTO {
 
   private boolean status = false;
   private String email;

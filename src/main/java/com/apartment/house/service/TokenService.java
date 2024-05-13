@@ -60,5 +60,4 @@ public class TokenService {
   public String decodeBase64(String token) {
     return new String(Base64.getDecoder().decode(token));
   }
-
 }

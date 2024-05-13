@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,6 @@ public class JwtFilterService extends OncePerRequestFilter {
   protected void doFilterInternal(@NonNull HttpServletRequest request,
       @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
       throws ServletException, IOException, ExpiredJwtException {
-
     try {
       if (request.getServletPath().contains("/api/auth")) {
         filterChain.doFilter(request, response);
@@ -47,7 +47,9 @@ public class JwtFilterService extends OncePerRequestFilter {
         return;
       }
       jwt = authorizationHeader.substring(7);
-
+      if (jwtService.isBlacklisted(jwt)) {
+        throw new AccessDeniedException("Unauthorized access");
+      }
       userEmail = jwtService.extractUsername(jwt);
       if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         final UserDetails userDetails = userDetailService.loadUserByUsername(userEmail);
