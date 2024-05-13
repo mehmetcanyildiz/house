@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   @GetMapping("/update")
-  public ResponseEntity<?> update(Errors errors) throws Exception {
-    if(errors.hasErrors())
-      return ResponseEntity.badRequest().body("error");
-
+  public ResponseEntity<?> update(){
     return ResponseEntity.ok("response");
   }
 }

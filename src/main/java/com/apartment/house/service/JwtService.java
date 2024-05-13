@@ -44,15 +44,8 @@ public class JwtService {
   }
 
   private Claims extractAllClaims(String token) throws ExpiredJwtException, SignatureException {
-    try {
-      return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
-          .getBody();
-    } catch (ExpiredJwtException e) {
-      System.out.println(" Token expired ");
-    } catch (Exception e) {
-      System.out.println(" Some other exception in JWT parsing ");
-    }
-    throw new ExpiredJwtException(null, null, "Token expired");
+    return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
+        .getBody();
   }
 
   public boolean isTokenExpired(String token) throws ExpiredJwtException {

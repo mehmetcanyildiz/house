@@ -1,13 +1,17 @@
 package com.apartment.house.controller;
 
+import com.apartment.house.dto.auth.ActivateAccountRequestDTO;
+import com.apartment.house.dto.auth.ActivateAccountResponseDTO;
 import com.apartment.house.dto.auth.LoginRequestDTO;
 import com.apartment.house.dto.auth.LoginResponseDTO;
+import com.apartment.house.dto.auth.PasswordResetClientRequestDTO;
+import com.apartment.house.dto.auth.PasswordResetClientResponseDTO;
+import com.apartment.house.dto.auth.PasswordResetRequestDTO;
+import com.apartment.house.dto.auth.PasswordResetResponseDTO;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
 import com.apartment.house.dto.auth.RegisterResponseDTO;
-import com.apartment.house.exception.handler.GlobalExceptionHandler;
 import com.apartment.house.service.AuthService;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +27,8 @@ public class AuthController {
 
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO) throws ExpiredJwtException {
+  public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginDTO)
+      throws ExpiredJwtException {
     LoginResponseDTO response = authService.login(loginDTO);
 
     return ResponseEntity.ok(response);
@@ -38,8 +43,27 @@ public class AuthController {
   }
 
   @GetMapping("/activate-account")
-  public void confirmEmail(@RequestParam("token") String token) throws MessagingException {
-    authService.activateAccount(token);
+  public ResponseEntity<?> activateAccount(@Valid ActivateAccountRequestDTO activateDTO)
+      throws MessagingException {
+    ActivateAccountResponseDTO response = authService.activateAccount(activateDTO);
+    return ResponseEntity.ok(response);
+  }
+
+
+  @PostMapping("/password-reset-client")
+  public ResponseEntity<?> passwordResetClient(
+      @RequestBody @Valid PasswordResetClientRequestDTO resetRequestDTO)
+      throws Exception {
+    PasswordResetClientResponseDTO response = authService.passwordResetClient(resetRequestDTO);
+
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("/password-reset")
+  public ResponseEntity<?> passwordReset(@RequestBody @Valid PasswordResetRequestDTO resetDTO)
+      throws MessagingException {
+    PasswordResetResponseDTO response = authService.passwordReset(resetDTO);
+    return ResponseEntity.ok(response);
   }
 
 }

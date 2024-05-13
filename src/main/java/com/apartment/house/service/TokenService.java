@@ -1,8 +1,11 @@
 package com.apartment.house.service;
 
+import com.apartment.house.enums.TokenTypeEnum;
 import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.TokenRepository;
+import java.util.Base64;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,8 @@ public class TokenService {
     tokenRepository.save(token);
   }
 
-  public TokenModel findByUser(UserModel user) {
-    return tokenRepository.findByUser(user).stream().findFirst()
-        .orElseThrow(() -> new RuntimeException("User not found"));
+  public Optional<TokenModel> findByTypeAndUser(TokenTypeEnum type, UserModel user) {
+    return tokenRepository.findFirstByTypeAndUserOrderByCreatedAtDesc(type, user);
   }
 
   public TokenModel findByToken(String token) {
@@ -30,8 +32,9 @@ public class TokenService {
   }
 
 
-  public TokenModel createTokenModel(UserModel user, String token) {
+  public TokenModel createTokenModel(UserModel user, TokenTypeEnum type, String token) {
     TokenModel tokenModel = new TokenModel();
+    tokenModel.setType(type);
     tokenModel.setToken(token);
     tokenModel.setUser(user);
     tokenModel.setExpiresAt(LocalDateTime.now().plusMinutes(15));
@@ -49,6 +52,14 @@ public class TokenService {
     }
 
     return token.toString();
+  }
+
+  public String encodeBase64(String token) {
+    return Base64.getEncoder().encodeToString(token.getBytes());
+  }
+
+  public String decodeBase64(String token) {
+    return new String(Base64.getDecoder().decode(token));
   }
 
 }

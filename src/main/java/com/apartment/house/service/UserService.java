@@ -57,4 +57,9 @@ public class UserService {
   public void save(UserModel user) {
     userRepository.save(user);
   }
+
+  public UserModel findUserByEmail(String email) {
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 }

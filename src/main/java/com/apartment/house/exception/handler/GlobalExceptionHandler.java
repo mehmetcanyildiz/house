@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-                  .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getCode())
+                  .errorCode(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getCode())
                   .businessErrorDescription(BusinessErrorCodesEnum.ACCOUNT_LOCKED.getDescription())
                   .error(e.getMessage())
                   .build());
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-                  .businessErrorCode(BusinessErrorCodesEnum.ACCOUNT_DISABLED.getCode())
+                  .errorCode(BusinessErrorCodesEnum.ACCOUNT_DISABLED.getCode())
                   .businessErrorDescription(
                       BusinessErrorCodesEnum.ACCOUNT_DISABLED.getDescription())
                   .error(e.getMessage())
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(ExceptionResponse.builder()
-                  .businessErrorCode(BusinessErrorCodesEnum.BAD_CREDENTIALS.getCode())
+                  .errorCode(BusinessErrorCodesEnum.BAD_CREDENTIALS.getCode())
                   .businessErrorDescription(BusinessErrorCodesEnum.BAD_CREDENTIALS.getDescription())
                   .error(e.getMessage())
                   .build());

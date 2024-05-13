@@ -1,10 +1,17 @@
 package com.apartment.house.service;
 
 import com.apartment.house.config.ApplicationConfig;
+import com.apartment.house.dto.auth.ActivateAccountRequestDTO;
+import com.apartment.house.dto.auth.ActivateAccountResponseDTO;
 import com.apartment.house.dto.auth.LoginRequestDTO;
 import com.apartment.house.dto.auth.LoginResponseDTO;
+import com.apartment.house.dto.auth.PasswordResetClientRequestDTO;
+import com.apartment.house.dto.auth.PasswordResetClientResponseDTO;
+import com.apartment.house.dto.auth.PasswordResetRequestDTO;
+import com.apartment.house.dto.auth.PasswordResetResponseDTO;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
 import com.apartment.house.dto.auth.RegisterResponseDTO;
+import com.apartment.house.enums.TokenTypeEnum;
 import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.enums.EmailTemplateNameEnum;
@@ -12,9 +19,12 @@ import com.apartment.house.enums.StatusEnum;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.Token;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import lombok.SneakyThrows;
 
@@ -32,6 +42,7 @@ public class AuthService {
   private final JwtService jwtService;
   private final UserService userService;
   private final TokenService tokenService;
+  private final PasswordEncoder passwordEncoder;
 
   @SneakyThrows
   public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) throws ExpiredJwtException {
@@ -45,13 +56,7 @@ public class AuthService {
     var claims = new HashMap<String, Object>();
     var user = ((UserModel) auth.getPrincipal());
     if (user.getStatus() != StatusEnum.ACTIVE) {
-      TokenModel tokenModel = tokenService.findByUser(user);
-      if (LocalDateTime.now().isAfter(tokenModel.getExpiresAt())) {
-        sendValidationEmail(tokenModel.getUser());
-        throw new RuntimeException(
-            "Activation Token has expired. A new token has been sent to your email");
-      }
-      throw new Exception("Account not activated. Please check your email for activation link");
+      sendValidationEmail(user);
     }
     claims.put("firstName", user.getFirstName());
     claims.put("lastname", user.getLastName());
@@ -77,37 +82,119 @@ public class AuthService {
   }
 
   @Transactional
-  public void activateAccount(String token) throws MessagingException {
-    TokenModel savedTokenModel = tokenService.findByToken(token);
+  public ActivateAccountResponseDTO activateAccount(ActivateAccountRequestDTO activateDTO)
+      throws MessagingException {
+    String decodedToken = tokenService.decodeBase64(activateDTO.getToken());
+    activateDTO.setToken(decodedToken);
+
+    TokenModel savedTokenModel = tokenService.findByToken(activateDTO.getToken());
     if (LocalDateTime.now().isAfter(savedTokenModel.getExpiresAt())) {
       sendValidationEmail(savedTokenModel.getUser());
       throw new RuntimeException(
           "Activation Token has expired. A new token has been sent to your email");
     }
+
     UserModel user = userService.findUserById(savedTokenModel.getUser().getId());
+
+    if (user.getStatus() == StatusEnum.ACTIVE) {
+      throw new RuntimeException("Account already activated");
+    }
+
     user.setStatus(StatusEnum.ACTIVE);
     userService.save(user);
+
+    ActivateAccountResponseDTO response = new ActivateAccountResponseDTO();
+    response.setStatus(true);
+    response.setMessage("Account activated successfully");
+    return response;
+  }
+
+  public PasswordResetClientResponseDTO passwordResetClient(
+      PasswordResetClientRequestDTO resetRequestDTO) throws MessagingException {
+    PasswordResetClientResponseDTO response = new PasswordResetClientResponseDTO();
+
+    UserModel user = userService.findUserByEmail(resetRequestDTO.getEmail());
+    sendResetPasswordEmail(user);
+    response.setStatus(true);
+    response.setMessage("Password reset link sent to your email");
+
+    return response;
+  }
+
+  public PasswordResetResponseDTO passwordReset(PasswordResetRequestDTO resetDTO)
+      throws MessagingException {
+    String decodedToken = tokenService.decodeBase64(resetDTO.getToken());
+    resetDTO.setToken(decodedToken);
+
+    TokenModel savedTokenModel = tokenService.findByToken(resetDTO.getToken());
+    if (LocalDateTime.now().isAfter(savedTokenModel.getExpiresAt())) {
+      sendResetPasswordEmail(savedTokenModel.getUser());
+      throw new RuntimeException(
+          "Reset Password Token has expired. A new token has been sent to your email");
+    }
+
+    UserModel user = userService.findUserById(savedTokenModel.getUser().getId());
+
+    if (user.getStatus() != StatusEnum.ACTIVE) {
+      throw new RuntimeException("Account is not active.");
+    }
+
+    if (!resetDTO.getPassword().equals(resetDTO.getRe_password())) {
+      throw new RuntimeException("Passwords do not match");
+    }
+
+    user.setPassword(passwordEncoder.encode(resetDTO.getPassword()));
+    userService.save(user);
+
+    PasswordResetResponseDTO response = new PasswordResetResponseDTO();
+    response.setStatus(true);
+    response.setMessage("Password reset successfully");
+    return response;
   }
 
   private void sendValidationEmail(UserModel user) throws MessagingException {
-    var newToken = generateAndSaveActivationToken(user);
-    var activationUrl = applicationConfig.baseUrl + "/auth/activate?token=" + newToken;
-    emailService.sendEmail(
-        user.getEmail(),
-        user.getFirstName(),
-        EmailTemplateNameEnum.ACTIVATION_EMAIL,
-        activationUrl, (String) newToken,
-        "Account activation"
+    Optional<TokenModel> tokenModel = tokenService.findByTypeAndUser(
+        TokenTypeEnum.ACTIVATION, user);
+    if (tokenModel.isPresent() && !LocalDateTime.now().isAfter(tokenModel.get().getExpiresAt())) {
+      throw new RuntimeException(
+          "You have an activation token that is still valid. Please check your email for the link");
+    }
+
+    var newToken = generateAndSaveActivationToken(user, TokenTypeEnum.ACTIVATION, 6);
+    var baseUrl = applicationConfig.baseUrl;
+    var encodedToken = tokenService.encodeBase64((String) newToken);
+    var activationUrl = baseUrl + "/auth/activate?token=" + encodedToken;
+
+    emailService.sendEmail(user.getEmail(), user.getFirstName(),
+                           EmailTemplateNameEnum.ACTIVATION_EMAIL, activationUrl, (String) newToken,
+                           "Account activation"
     );
   }
 
-  private Object generateAndSaveActivationToken(UserModel user) {
-    String generatedToken = tokenService.generateActivationToken(6);
-    TokenModel tokenModel = tokenService.createTokenModel(user, generatedToken);
+  private void sendResetPasswordEmail(UserModel user) throws MessagingException {
+    Optional<TokenModel> tokenModel = tokenService.findByTypeAndUser(
+        TokenTypeEnum.RESET, user);
+    if (tokenModel.isPresent() && !LocalDateTime.now().isAfter(tokenModel.get().getExpiresAt())) {
+      throw new RuntimeException(
+          "You have an reset password token that is still valid. Please check your email for the link");
+    }
+
+    var newToken = generateAndSaveActivationToken(user, TokenTypeEnum.RESET, 8);
+    var baseUrl = applicationConfig.baseUrl;
+    var encodedToken = tokenService.encodeBase64((String) newToken);
+    var activationUrl = baseUrl + "/auth/reset-password?token=" + encodedToken;
+
+    emailService.sendEmail(user.getEmail(), user.getFirstName(),
+                           EmailTemplateNameEnum.RESET_PASSWORD, activationUrl, (String) newToken,
+                           "Reset Password"
+    );
+  }
+
+  private Object generateAndSaveActivationToken(UserModel user, TokenTypeEnum type, int length) {
+    String generatedToken = tokenService.generateActivationToken(length);
+    TokenModel tokenModel = tokenService.createTokenModel(user, type, generatedToken);
     tokenService.save(tokenModel);
 
     return generatedToken;
   }
-
-
 }

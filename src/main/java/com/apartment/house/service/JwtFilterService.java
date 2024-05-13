@@ -1,6 +1,7 @@
 package com.apartment.house.service;
 
-import com.apartment.house.exception.handler.GlobalExceptionHandler;
+import com.apartment.house.exception.handler.ExceptionResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +27,7 @@ public class JwtFilterService extends OncePerRequestFilter {
 
   private final JwtService jwtService;
   private final UserDetailsService userDetailService;
+  private final ObjectMapper mapper;
 
 
   @Override
@@ -55,10 +59,13 @@ public class JwtFilterService extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authToken);
         }
       }
-    } catch (ExpiredJwtException e) {
-      throw new ExpiredJwtException(null, null, "Token expired");
     } catch (Exception e) {
-      throw new RuntimeException("Some other exception in JWT parsing");
+      ExceptionResponse exceptionResponse = new ExceptionResponse();
+      exceptionResponse.setErrorCode(HttpStatus.UNAUTHORIZED.value());
+      exceptionResponse.setError(e.getMessage());
+      response.setStatus(HttpStatus.UNAUTHORIZED.value());
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      mapper.writeValue(response.getWriter(), exceptionResponse);
     }
     filterChain.doFilter(request, response);
   }

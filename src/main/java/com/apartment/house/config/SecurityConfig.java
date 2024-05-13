@@ -25,7 +25,7 @@ public class SecurityConfig {
   private final AuthenticationProvider authenticationProvider;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws ExpiredJwtException,Exception  {
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception  {
     http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             authorizeRequests -> authorizeRequests.requestMatchers(
