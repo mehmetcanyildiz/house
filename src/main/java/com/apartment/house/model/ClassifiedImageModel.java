@@ -1,5 +1,6 @@
 package com.apartment.house.model;
 
+import com.apartment.house.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -22,4 +23,6 @@ public class ClassifiedImageModel extends BaseModel {
   @Column(name = "name", nullable = false)
   private String name;
 
+  @Column(name = "status", nullable = false)
+  private StatusEnum status;
 }

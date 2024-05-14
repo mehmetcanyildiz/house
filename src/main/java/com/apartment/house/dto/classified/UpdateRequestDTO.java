@@ -9,7 +9,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class CreateRequestDTO implements ClassifiedRequestDTO {
+public class UpdateRequestDTO implements ClassifiedRequestDTO {
 
   @NotNull(message = "Title is required")
   private String title;
@@ -49,6 +49,9 @@ public class CreateRequestDTO implements ClassifiedRequestDTO {
 
   @NotNull(message = "Furnished is required")
   private Boolean isFurnished;
+
+  @NotNull(message = "Classified Status is required")
+  private String classifiedStatus;
 
   @NotNull(message = "Images are required")
   private List<MultipartFile> images;

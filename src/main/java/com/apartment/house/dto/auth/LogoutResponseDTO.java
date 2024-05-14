@@ -6,6 +6,8 @@ import lombok.Data;
 public class LogoutResponseDTO {
 
   private boolean status = false;
+
   private String email;
+
   private String message;
 }

@@ -3,6 +3,7 @@ package com.apartment.house.model;
 import com.apartment.house.enums.ClassifiedCategoryEnum;
 import com.apartment.house.enums.ClassifiedStatusEnum;
 import com.apartment.house.enums.ClassifiedTypeEnum;
+import com.apartment.house.enums.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -22,7 +23,7 @@ public class ClassifiedModel extends BaseModel {
   @Column(name = "title", nullable = false, length = 60)
   private String title;
 
-  @Column(name = "description", nullable = false, length = 500)
+  @Column(name = "description", nullable = false, columnDefinition = "TEXT")
   private String description;
 
   @Column(name = "price", nullable = false)
@@ -36,6 +37,9 @@ public class ClassifiedModel extends BaseModel {
 
   @Column(name = "room_number", nullable = false)
   private Integer roomNumber;
+
+  @Column(name = "living_room_number", nullable = false)
+  private Integer livingRoomNumber;
 
   @Column(name = "gross_area", nullable = false)
   private Integer grossArea;
@@ -57,4 +61,7 @@ public class ClassifiedModel extends BaseModel {
 
   @Column(name = "classified_status", nullable = false)
   private ClassifiedStatusEnum classifiedStatus;
+
+  @Column(name = "status", nullable = false)
+  private StatusEnum status;
 }

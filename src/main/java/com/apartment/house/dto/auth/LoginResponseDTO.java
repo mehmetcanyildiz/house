@@ -6,6 +6,8 @@ import lombok.Data;
 public class LoginResponseDTO {
 
   private boolean status = false;
+
   private String message;
+
   private String token;
 }

@@ -4,7 +4,7 @@ package com.apartment.house.dto.classified;
 import lombok.Data;
 
 @Data
-public class CreateResponseDTO {
+public class UpdateResponseDTO {
 
   private boolean status = false;
 

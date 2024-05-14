@@ -7,6 +7,8 @@ import lombok.Data;
 public class RegisterResponseDTO {
 
   private boolean status = false;
+
   private String message;
+
   private List<String> errors;
 }

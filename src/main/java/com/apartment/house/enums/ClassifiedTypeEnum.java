@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum ClassifiedTypeEnum {
+
   SALE("Sale"),
+
   RENT("Rent");
 
   private final String type;

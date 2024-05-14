@@ -4,11 +4,11 @@ package com.apartment.house.dto.classified;
 import lombok.Data;
 
 @Data
-public class CreateResponseDTO {
+public class DeleteResponseDTO {
 
   private boolean status = false;
 
-  private String message;
-
   private String id;
+
+  private String message;
 }

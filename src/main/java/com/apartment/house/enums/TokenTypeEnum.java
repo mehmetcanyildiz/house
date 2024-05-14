@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum TokenTypeEnum {
+
   ACTIVATION("activation_account"),
+
   RESET("reset_password");
 
   private final String type;

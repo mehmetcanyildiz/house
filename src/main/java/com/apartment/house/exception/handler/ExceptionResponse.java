@@ -16,9 +16,15 @@ import lombok.NoArgsConstructor;
 public class ExceptionResponse {
 
   private boolean status = false;
+
   private Integer errorCode;
+
   private String error;
+
   private String businessErrorDescription;
+
   private Set<String> validationErrors;
+
   private Map<String, String> errors;
+
 }

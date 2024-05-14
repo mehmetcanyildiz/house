@@ -6,6 +6,8 @@ import lombok.Data;
 public class ActivateAccountResponseDTO {
 
   private boolean status = false;
+
   private String email;
+
   private String message;
 }
