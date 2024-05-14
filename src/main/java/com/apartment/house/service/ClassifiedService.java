@@ -202,7 +202,8 @@ public class ClassifiedService {
     return deleteResponseDTO;
   }
 
-  public boolean isMyClassified(ClassifiedModel classified) {
-    return classified.getUser().getId().equals(authService.getAuthUser().getId());
+  public ClassifiedModel findClassifiedById(String classifiedId) {
+    return classifiedRepository.findById(classifiedId)
+        .orElseThrow(() -> new RuntimeException("Classified not found"));
   }
 }

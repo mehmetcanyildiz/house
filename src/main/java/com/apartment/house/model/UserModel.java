@@ -70,4 +70,5 @@ public class UserModel extends BaseModel implements UserDetails {
   public boolean isEnabled() {
     return getStatus() == StatusEnum.ACTIVE;
   }
+
 }

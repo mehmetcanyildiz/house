@@ -8,6 +8,8 @@ import com.apartment.house.dto.classified.UpdateRequestDTO;
 import com.apartment.house.dto.classified.UpdateResponseDTO;
 import com.apartment.house.service.ClassifiedService;
 import com.apartment.house.service.LoggerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -31,6 +33,11 @@ public class ClassifiedController {
   private final ClassifiedService classifiedService;
   private final LoggerService loggerService;
 
+  @SecurityRequirement(name = "bearerAuth")
+  @Operation(summary = "Create", description = "Create a classified", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified created"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @PostMapping("/create")
   public ResponseEntity<?> create(@ModelAttribute @Valid CreateRequestDTO requestDTO) {
     CreateResponseDTO response = classifiedService.create(requestDTO);
@@ -39,6 +46,11 @@ public class ClassifiedController {
     return ResponseEntity.ok(response);
   }
 
+  @SecurityRequirement(name = "bearerAuth")
+  @Operation(summary = "Update", description = "Update a classified", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified updated"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @PutMapping("/update/{id}")
   public ResponseEntity<?> update(@PathVariable String id,
       @ModelAttribute @Valid UpdateRequestDTO requestDTO) {
@@ -48,6 +60,11 @@ public class ClassifiedController {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Delete", description = "Delete a classified", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified deleted"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
+  @SecurityRequirement(name = "bearerAuth")
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<?> delete(@PathVariable String id) {
     DeleteResponseDTO deleteResponseDTO = classifiedService.delete(id);
@@ -56,6 +73,11 @@ public class ClassifiedController {
     return ResponseEntity.ok(deleteResponseDTO);
   }
 
+  @Operation(summary = "Delete Image", description = "Delete an image", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Image deleted"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
+  @SecurityRequirement(name = "bearerAuth")
   @DeleteMapping("/delete/image/{id}")
   public ResponseEntity<?> deleteImage(@PathVariable String id) {
     DeleteResponseDTO deleteResponseDTO = classifiedService.deleteImage(id);
@@ -64,6 +86,10 @@ public class ClassifiedController {
     return ResponseEntity.ok(deleteResponseDTO);
   }
 
+  @Operation(summary = "Get All", description = "Get all classifieds", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classifieds retrieved"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @GetMapping("/all")
   public ResponseEntity<?> getItems() {
 
@@ -71,12 +97,21 @@ public class ClassifiedController {
     return ResponseEntity.ok(classifieds);
   }
 
+  @Operation(summary = "Get By Id", description = "Get a classified by id", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified retrieved"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @GetMapping("/get/{id}")
   public ResponseEntity<?> getClassifiedById(@PathVariable String id) {
     ClassifiedDTO classified = classifiedService.getClassifiedById(id);
     return ResponseEntity.ok(classified);
   }
 
+  @Operation(summary = "Get By User Id", description = "Get classifieds by user id", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classifieds retrieved"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
+  @SecurityRequirement(name = "bearerAuth")
   @GetMapping("/user/{id}")
   public ResponseEntity<?> getClassifiedByUserId(@PathVariable String id) {
     List<ClassifiedDTO> classifieds = classifiedService.getClassifiedByUserId(id);
