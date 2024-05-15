@@ -44,3 +44,6 @@ jwt:
   expiration: 860000
 secret:
   key: 0nZyJqOE91Af62zEjyq64unY8hex9eIc0nZyJqOE91Af62zEjyq64unY8hex9eIc
+logging:
+  file:
+    name: ./logs/dev.log
