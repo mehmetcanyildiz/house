@@ -18,4 +18,7 @@ public class ApplicationConfig {
   @Value("${base.url}")
   public String baseUrl;
 
+  @Value("${base.web.url}")
+  public String baseWebUrl;
+
 }

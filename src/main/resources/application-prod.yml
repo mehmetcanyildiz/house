@@ -37,7 +37,9 @@ spring:
 server:
   port: 8090
 base:
-  url: http://localhost:9090
+  web:
+    url: http://localhost:4200
+  url: http://localhost:8090
 mail:
   from: hello@demomailtrap.com
 jwt:
