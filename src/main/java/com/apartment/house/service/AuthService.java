@@ -18,6 +18,7 @@ import com.apartment.house.enums.StatusEnum;
 import com.apartment.house.enums.TokenTypeEnum;
 import com.apartment.house.model.TokenModel;
 import com.apartment.house.model.UserModel;
+import com.apartment.house.repository.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
@@ -46,6 +47,7 @@ public class AuthService {
   private final UserService userService;
   private final TokenService tokenService;
   private final PasswordEncoder passwordEncoder;
+  private final TokenRepository tokenRepository;
 
   public UserModel getAuthUser() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -72,7 +74,11 @@ public class AuthService {
     claims.put("email", user.getEmail());
     var jwtToken = jwtService.generateToken(claims, user);
     response.setStatus(true);
-    response.setToken(jwtToken);
+    response.setUid(user.getId());
+    response.setEmail(user.getEmail());
+    response.setFirstName(user.getFirstName());
+    response.setLastName(user.getLastName());
+    response.setAccessToken(jwtToken);
     response.setMessage("User logged in successfully");
 
     return response;
@@ -90,7 +96,6 @@ public class AuthService {
     return response;
   }
 
-  @Transactional
   public ActivateAccountResponseDTO activateAccount(ActivateAccountRequestDTO activateDTO)
       throws MessagingException {
     String decodedToken = tokenService.decodeBase64(activateDTO.getToken());
@@ -173,9 +178,8 @@ public class AuthService {
     }
 
     var newToken = generateAndSaveActivationToken(user, TokenTypeEnum.ACTIVATION, 6);
-    var baseUrl = applicationConfig.baseUrl;
     var encodedToken = tokenService.encodeBase64((String) newToken);
-    var activationUrl = baseUrl + "/auth/activate?token=" + encodedToken;
+    var activationUrl = applicationConfig.baseWebUrl + "/auth/activate-account?token=" + encodedToken;
 
     emailService.sendEmail(user.getEmail(), user.getFirstName(),
                            EmailTemplateNameEnum.ACTIVATION_EMAIL, activationUrl, (String) newToken,
@@ -192,9 +196,8 @@ public class AuthService {
     }
 
     var newToken = generateAndSaveActivationToken(user, TokenTypeEnum.RESET, 8);
-    var baseUrl = applicationConfig.baseUrl;
     var encodedToken = tokenService.encodeBase64((String) newToken);
-    var activationUrl = baseUrl + "/auth/reset-password?token=" + encodedToken;
+    var activationUrl = applicationConfig.baseWebUrl + "/auth/reset-password?token=" + encodedToken;
 
     emailService.sendEmail(user.getEmail(), user.getFirstName(),
                            EmailTemplateNameEnum.RESET_PASSWORD, activationUrl, (String) newToken,

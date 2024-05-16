@@ -9,5 +9,13 @@ public class LoginResponseDTO {
 
   private String message;
 
-  private String token;
+  private String uid;
+
+  private String email;
+
+  private String firstName;
+
+  private String lastName;
+
+  private String accessToken;
 }

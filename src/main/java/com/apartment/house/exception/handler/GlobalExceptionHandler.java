@@ -86,8 +86,8 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ExceptionResponse> handleException(Exception e) {
     loggerService.logError(e.getMessage(), e);
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-        ExceptionResponse.builder().businessErrorDescription("Internal error, contact the admin")
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+        ExceptionResponse.builder().businessErrorDescription("Bad request, contact the admin")
             .error(e.getMessage()).build());
   }
 }
