@@ -11,6 +11,7 @@ import com.apartment.house.service.LoggerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,8 @@ public class ClassifiedController {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified created"),
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @PostMapping("/create")
-  public ResponseEntity<?> create(@ModelAttribute @Valid CreateRequestDTO requestDTO) {
+  public ResponseEntity<?> create(@ModelAttribute @Valid CreateRequestDTO requestDTO)
+      throws MessagingException {
     CreateResponseDTO response = classifiedService.create(requestDTO);
     loggerService.logInfo(response.getId() + " => " + response.getMessage());
 

@@ -1,18 +1,10 @@
 package com.apartment.house.util;
 
-import java.text.Normalizer;
-import java.util.regex.Pattern;
-
-
 public class SlugUtil {
 
-  private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
-  private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
-
-  public static String toSlug(String input) {
-    String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
-    String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
-    String slug = NONLATIN.matcher(normalized).replaceAll("");
-    return slug.toLowerCase();
+  public static String toSlug(String title) {
+    return title.toLowerCase()
+        .replaceAll("\\s+", "-")
+        .replaceAll("[^a-z0-9-]", "");
   }
 }

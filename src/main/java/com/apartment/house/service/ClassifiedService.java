@@ -1,5 +1,6 @@
 package com.apartment.house.service;
 
+import com.apartment.house.config.ApplicationConfig;
 import com.apartment.house.dto.classified.ClassifiedDTO;
 import com.apartment.house.dto.classified.ClassifiedRequestDTO;
 import com.apartment.house.dto.classified.CreateImageRequestDTO;
@@ -10,11 +11,13 @@ import com.apartment.house.dto.classified.DeleteResponseDTO;
 import com.apartment.house.dto.classified.UpdateRequestDTO;
 import com.apartment.house.dto.classified.UpdateResponseDTO;
 import com.apartment.house.enums.ClassifiedStatusEnum;
+import com.apartment.house.enums.EmailTemplateNameEnum;
 import com.apartment.house.enums.StatusEnum;
 import com.apartment.house.model.ClassifiedModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.ClassifiedRepository;
 import com.apartment.house.util.SlugUtil;
+import jakarta.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,8 +31,10 @@ public class ClassifiedService {
   private final ClassifiedImageService classifiedImageService;
   private final AuthService authService;
   private final UserService userService;
+  private final EmailService emailService;
+  private final ApplicationConfig applicationConfig;
 
-  public CreateResponseDTO create(CreateRequestDTO requestDTO) {
+  public CreateResponseDTO create(CreateRequestDTO requestDTO) throws MessagingException {
     ClassifiedModel classifiedModel = convertClassifiedModel(requestDTO, null);
     classifiedRepository.save(classifiedModel);
 
@@ -46,6 +51,15 @@ public class ClassifiedService {
       return responseDTO;
     }
 
+    emailService.sendEmail(classifiedModel.getUser().getEmail(),
+                           classifiedModel.getUser().getFirstName() + " "
+                               + classifiedModel.getUser().getLastName(),
+                           EmailTemplateNameEnum.CLASSIFIED_CREATED,
+                           applicationConfig.baseWebUrl + "/classified/detail/"
+                               + classifiedModel.getSlug(), classifiedModel.getTitle(),
+                           "Classified created"
+    );
+
     CreateResponseDTO responseDTO = new CreateResponseDTO();
     responseDTO.setStatus(true);
     responseDTO.setId(classifiedModel.getId());
@@ -55,8 +69,7 @@ public class ClassifiedService {
     return responseDTO;
   }
 
-  private ClassifiedModel convertClassifiedModel(
-      ClassifiedRequestDTO requestDTO,
+  private ClassifiedModel convertClassifiedModel(ClassifiedRequestDTO requestDTO,
       ClassifiedModel classifiedModel) {
     if (classifiedModel == null) {
       classifiedModel = new ClassifiedModel();
@@ -64,7 +77,8 @@ public class ClassifiedService {
 
     classifiedModel.setUser(authService.getAuthUser());
     classifiedModel.setTitle(requestDTO.getTitle());
-    classifiedModel.setSlug(SlugUtil.toSlug(requestDTO.getTitle()));
+    classifiedModel.setSlug(
+        SlugUtil.toSlug(requestDTO.getTitle()) + "-" + System.currentTimeMillis());
     classifiedModel.setDescription(requestDTO.getDescription());
     classifiedModel.setPrice(requestDTO.getPrice());
     classifiedModel.setType(requestDTO.getType());
