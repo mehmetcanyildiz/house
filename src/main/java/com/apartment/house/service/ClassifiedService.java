@@ -14,6 +14,7 @@ import com.apartment.house.enums.StatusEnum;
 import com.apartment.house.model.ClassifiedModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.ClassifiedRepository;
+import com.apartment.house.util.SlugUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -46,8 +47,9 @@ public class ClassifiedService {
     }
 
     CreateResponseDTO responseDTO = new CreateResponseDTO();
-    responseDTO.setId(classifiedModel.getId());
     responseDTO.setStatus(true);
+    responseDTO.setId(classifiedModel.getId());
+    responseDTO.setSlug(classifiedModel.getSlug());
     responseDTO.setMessage("Classified created successfully");
 
     return responseDTO;
@@ -62,6 +64,7 @@ public class ClassifiedService {
 
     classifiedModel.setUser(authService.getAuthUser());
     classifiedModel.setTitle(requestDTO.getTitle());
+    classifiedModel.setSlug(SlugUtil.toSlug(requestDTO.getTitle()));
     classifiedModel.setDescription(requestDTO.getDescription());
     classifiedModel.setPrice(requestDTO.getPrice());
     classifiedModel.setType(requestDTO.getType());
@@ -91,6 +94,7 @@ public class ClassifiedService {
     ClassifiedDTO classifiedDTO = new ClassifiedDTO();
 
     classifiedDTO.setTitle(classifiedModel.getTitle());
+    classifiedDTO.setSlug(classifiedDTO.getSlug());
     classifiedDTO.setDescription(classifiedModel.getDescription());
     classifiedDTO.setPrice(classifiedModel.getPrice());
     classifiedDTO.setType(classifiedModel.getType());

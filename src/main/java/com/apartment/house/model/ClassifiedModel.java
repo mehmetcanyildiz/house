@@ -23,6 +23,9 @@ public class ClassifiedModel extends BaseModel {
   @Column(name = "title", nullable = false, length = 60)
   private String title;
 
+  @Column(name = "slug", nullable = false)
+  private String slug;
+
   @Column(name = "description", nullable = false, columnDefinition = "TEXT")
   private String description;
 

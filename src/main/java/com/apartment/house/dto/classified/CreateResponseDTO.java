@@ -8,6 +8,8 @@ public class CreateResponseDTO {
 
   private boolean status = false;
 
+  private String slug;
+
   private String message;
 
   private String id;

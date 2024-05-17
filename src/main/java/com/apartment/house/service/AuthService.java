@@ -78,8 +78,9 @@ public class AuthService {
     response.setEmail(user.getEmail());
     response.setFirstName(user.getFirstName());
     response.setLastName(user.getLastName());
+    response.setPhone(user.getPhone());
     response.setAccessToken(jwtToken);
-    response.setMessage("User logged in successfully");
+    response.setMessage("User login in successfully");
 
     return response;
   }
@@ -219,7 +220,7 @@ public class AuthService {
     jwtService.addBlackListToken(logoutRequestDTO);
     response.setStatus(true);
     response.setEmail(userEmail);
-    response.setMessage("User logged out successfully");
+    response.setMessage("User logout successfully");
 
     return response;
   }
