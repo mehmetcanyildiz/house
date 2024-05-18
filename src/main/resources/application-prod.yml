@@ -3,11 +3,11 @@ spring:
     name: house
   config:
     activate:
-      on-profile: test
+      on-profile: prod
   datasource:
     url: ${DATABASE_URL}
-    username: u57vi4lmv32n8p
-    password: p7582a682a168800827d82bc4e3c00acc907875fe8a999676c34f2d3340065287
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   servlet:
     multipart:
       enabled: true
