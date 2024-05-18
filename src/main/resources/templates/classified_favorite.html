@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Property Successfully Created</title>
+  <title>Favorite your Property</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -45,13 +45,12 @@
 </head>
 <body>
 <div class="container">
-  <h1>New Classified</h1>
+  <h1>New Favorite Added</h1>
   <p class="greeting" th:text="'Dear ' + ${username} + ','"></p>
-  <p>Thanks for adding a new property. We hope you will achieve the results you want as soon as
-    possible.</p>
+  <p>Your property has been added to favourites</p>
   <div class="activation-code"><span th:text="${activationCode}"></span></div>
   <div class="activation-link">
-    <a th:href="${confirmationUrl}" target="_blank">Show</a>
+    <a th:href="${confirmationUrl}" target="_blank">Show your property</a>
   </div>
 </div>
 </body>

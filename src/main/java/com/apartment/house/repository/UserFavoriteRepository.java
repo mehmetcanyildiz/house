@@ -13,5 +13,6 @@ public interface UserFavoriteRepository extends JpaRepository<UserFavoriteModel,
 
   List<UserFavoriteModel> findByUser(UserModel user);
 
-  Optional<Object> findByUserAndClassified(UserModel user, ClassifiedModel classified);
+  Optional<UserFavoriteModel> findByUserAndClassified(UserModel user, ClassifiedModel classified);
+
 }

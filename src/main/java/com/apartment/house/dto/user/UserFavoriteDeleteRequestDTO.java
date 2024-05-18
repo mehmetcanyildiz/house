@@ -7,5 +7,5 @@ import lombok.Data;
 public class UserFavoriteDeleteRequestDTO {
 
   @NotNull
-  private String id;
+  private String classifiedId;
 }

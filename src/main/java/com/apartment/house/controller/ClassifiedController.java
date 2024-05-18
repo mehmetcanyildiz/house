@@ -99,13 +99,13 @@ public class ClassifiedController {
     return ResponseEntity.ok(classifieds);
   }
 
-  @Operation(summary = "Get By Id", description = "Get a classified by id", tags = {
+  @Operation(summary = "Get By Slug", description = "Get a classified by slug", tags = {
       "Classified"}, responses = {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classified retrieved"),
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
-  @GetMapping("/get/{id}")
-  public ResponseEntity<?> getClassifiedById(@PathVariable String id) {
-    ClassifiedDTO classified = classifiedService.getClassifiedById(id);
+  @GetMapping("/get/{slug}")
+  public ResponseEntity<?> getClassifiedBySlug(@PathVariable String slug) {
+    ClassifiedDTO classified = classifiedService.getClassifiedBySlug(slug);
     return ResponseEntity.ok(classified);
   }
 

@@ -1,20 +1,23 @@
 package com.apartment.house.service;
 
+import com.apartment.house.config.ApplicationConfig;
 import com.apartment.house.dto.auth.RegisterRequestDTO;
-import com.apartment.house.dto.user.UserFavoriteDeleteRequestDTO;
 import com.apartment.house.dto.user.UserFavoriteResponseDTO;
 import com.apartment.house.dto.user.UserFavoritesResponseDTO;
 import com.apartment.house.dto.user.UserUpdateRequestDTO;
 import com.apartment.house.dto.user.UserUpdateResponseDTO;
+import com.apartment.house.enums.EmailTemplateNameEnum;
 import com.apartment.house.enums.RoleEnum;
 import com.apartment.house.model.ClassifiedModel;
 import com.apartment.house.model.UserFavoriteModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.UserFavoriteRepository;
 import com.apartment.house.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class UserService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserFavoriteRepository userFavoriteRepository;
+  private final EmailService emailService;
+  private final Environment environment;
+  private final ApplicationConfig applicationConfig;
 
   public void validateUserByEmail(String email) throws Exception {
     Optional<UserModel> user = userRepository.findByEmail(email);
@@ -88,17 +94,23 @@ public class UserService {
     return response;
   }
 
-  public UserFavoriteResponseDTO addFavorite(UserModel user, ClassifiedModel classified) {
-
-    userFavoriteRepository.findByUserAndClassified(user, classified)
-        .ifPresent(favorite -> {
-          throw new RuntimeException("Favorite already exists");
-        });
-
+  public UserFavoriteResponseDTO addFavorite(UserModel user, ClassifiedModel classified)
+      throws MessagingException {
     UserFavoriteModel model = new UserFavoriteModel();
     model.setUser(user);
     model.setClassified(classified);
     userFavoriteRepository.save(model);
+
+    String url = applicationConfig.baseWebUrl + "/classfied/detail/" + classified.getSlug();
+
+    emailService.sendEmail(
+        classified.getUser().getEmail(),
+        classified.getUser().getFirstName(),
+        EmailTemplateNameEnum.CLASSIFIED_FAVORITE,
+        url,
+        classified.getTitle(),
+        "Favorite added"
+    );
 
     UserFavoriteResponseDTO response = new UserFavoriteResponseDTO();
     response.setStatus(true);
@@ -109,18 +121,17 @@ public class UserService {
   }
 
   public UserFavoriteResponseDTO deleteFavorite(UserModel user,
-      UserFavoriteDeleteRequestDTO requestDTO) {
-    UserFavoriteModel model = userFavoriteRepository.findById(requestDTO.getId())
+      ClassifiedModel classified) {
+
+    UserFavoriteModel model = userFavoriteRepository.findByUserAndClassified(user, classified)
         .orElseThrow(() -> new RuntimeException("Favorite not found"));
-    if (!model.getUser().getId().equals(user.getId())) {
-      throw new RuntimeException("Unauthorized");
-    }
+
     userFavoriteRepository.delete(model);
 
     UserFavoriteResponseDTO response = new UserFavoriteResponseDTO();
     response.setStatus(true);
     response.setMessage("Favorite deleted");
-    response.setId(requestDTO.getId());
+    response.setId(classified.getId());
 
     return response;
   }
@@ -132,5 +143,9 @@ public class UserService {
     }
 
     return UserFavoritesResponseDTO.convert(favorites);
+  }
+
+  public Boolean isFavorite(UserModel authUser, ClassifiedModel classifiedModel) {
+    return userFavoriteRepository.findByUserAndClassified(authUser, classifiedModel).isPresent();
   }
 }

@@ -3,6 +3,7 @@ package com.apartment.house.service;
 import com.apartment.house.config.ApplicationConfig;
 import com.apartment.house.dto.classified.ClassifiedDTO;
 import com.apartment.house.dto.classified.ClassifiedRequestDTO;
+import com.apartment.house.dto.classified.ClassifiedUserDTO;
 import com.apartment.house.dto.classified.CreateImageRequestDTO;
 import com.apartment.house.dto.classified.CreateImageResponseDTO;
 import com.apartment.house.dto.classified.CreateRequestDTO;
@@ -97,8 +98,8 @@ public class ClassifiedService {
     return classifiedModel;
   }
 
-  public ClassifiedDTO getClassifiedById(String id) {
-    ClassifiedModel classifiedModel = classifiedRepository.findByIdAndStatus(id, StatusEnum.ACTIVE)
+  public ClassifiedDTO getClassifiedBySlug(String slug) {
+    ClassifiedModel classifiedModel = classifiedRepository.findBySlugAndStatus(slug, StatusEnum.ACTIVE)
         .orElseThrow(() -> new RuntimeException("Classified not found"));
 
     return convertClassifiedDTO(classifiedModel);
@@ -106,9 +107,11 @@ public class ClassifiedService {
 
   private ClassifiedDTO convertClassifiedDTO(ClassifiedModel classifiedModel) {
     ClassifiedDTO classifiedDTO = new ClassifiedDTO();
+    ClassifiedUserDTO classifiedUserDTO = new ClassifiedUserDTO();
 
+    classifiedDTO.setId(classifiedModel.getId());
     classifiedDTO.setTitle(classifiedModel.getTitle());
-    classifiedDTO.setSlug(classifiedDTO.getSlug());
+    classifiedDTO.setSlug(classifiedModel.getSlug());
     classifiedDTO.setDescription(classifiedModel.getDescription());
     classifiedDTO.setPrice(classifiedModel.getPrice());
     classifiedDTO.setType(classifiedModel.getType());
@@ -123,6 +126,15 @@ public class ClassifiedService {
     classifiedDTO.setIsFurnished(classifiedModel.getIsFurnished());
     classifiedDTO.setClassifiedStatus(classifiedModel.getClassifiedStatus());
     classifiedDTO.setImages(classifiedImageService.getClassifiedImages(classifiedModel));
+
+    classifiedDTO.setIsFavorite(userService.isFavorite(authService.getAuthUser(), classifiedModel));
+
+    // User Details
+    classifiedUserDTO.setFirstname(classifiedModel.getUser().getFirstName());
+    classifiedUserDTO.setLastname(classifiedModel.getUser().getLastName());
+    classifiedUserDTO.setEmail(classifiedModel.getUser().getEmail());
+    classifiedUserDTO.setPhone(classifiedModel.getUser().getPhone());
+    classifiedDTO.setUser(classifiedUserDTO);
 
     return classifiedDTO;
   }

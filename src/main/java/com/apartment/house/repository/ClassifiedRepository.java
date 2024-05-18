@@ -18,4 +18,6 @@ public interface ClassifiedRepository extends JpaRepository<ClassifiedModel, Str
   List<ClassifiedModel> findByStatus(StatusEnum statusEnum);
 
   Optional<ClassifiedModel> findByIdAndStatus(String id, StatusEnum statusEnum);
+
+  Optional<ClassifiedModel> findBySlugAndStatus(String slug, StatusEnum statusEnum);
 }

@@ -15,6 +15,7 @@ import com.apartment.house.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,9 +57,13 @@ public class UserController {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Favorite added"),
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @PostMapping("/favorite/add")
-  public ResponseEntity<?> addFavorite(@RequestBody @Valid UserFavoriteRequestDTO requestDTO) {
+  public ResponseEntity<?> addFavorite(@RequestBody @Valid UserFavoriteRequestDTO requestDTO)
+      throws MessagingException {
     UserModel user = authService.getAuthUser();
     ClassifiedModel classified = classifiedService.findClassifiedById(requestDTO.getClassifiedId());
+    if(userService.isFavorite(user, classified)){
+      return ResponseEntity.badRequest().body("Already added to favorites");
+    }
     UserFavoriteResponseDTO response = userService.addFavorite(user, classified);
     loggerService.logInfo(response.getId() + " => " + response.getMessage());
 
@@ -73,7 +78,8 @@ public class UserController {
   public ResponseEntity<?> deleteFavorite(
       @RequestBody @Valid UserFavoriteDeleteRequestDTO requestDTO) {
     UserModel user = authService.getAuthUser();
-    UserFavoriteResponseDTO response = userService.deleteFavorite(user, requestDTO);
+    ClassifiedModel classified = classifiedService.findClassifiedById(requestDTO.getClassifiedId());
+    UserFavoriteResponseDTO response = userService.deleteFavorite(user, classified);
     loggerService.logInfo(response.getId() + " => " + response.getMessage());
 
     return ResponseEntity.ok(response);

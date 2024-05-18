@@ -9,6 +9,8 @@ public enum EmailTemplateNameEnum {
 
   CLASSIFIED_CREATED("classified_created"),
 
+  CLASSIFIED_FAVORITE("classified_favorite"),
+
   RESET_PASSWORD("reset_password");
 
   private final String value;

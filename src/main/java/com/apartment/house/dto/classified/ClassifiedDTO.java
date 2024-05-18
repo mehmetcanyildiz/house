@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class ClassifiedDTO {
 
+  private String id;
+
   private String title;
 
   private String slug;
@@ -37,7 +39,11 @@ public class ClassifiedDTO {
 
   private Boolean isFurnished;
 
+  private Boolean isFavorite;
+
   private ClassifiedStatusEnum classifiedStatus;
+
+  private ClassifiedUserDTO user;
 
   private List<ClassifiedImageDTO> images;
 }
