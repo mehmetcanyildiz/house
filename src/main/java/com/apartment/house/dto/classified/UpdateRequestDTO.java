@@ -53,6 +53,5 @@ public class UpdateRequestDTO implements ClassifiedRequestDTO {
   @NotNull(message = "Classified Status is required")
   private String classifiedStatus;
 
-  @NotNull(message = "Images are required")
-  private List<MultipartFile> images;
+  private List<MultipartFile> images = null;
 }

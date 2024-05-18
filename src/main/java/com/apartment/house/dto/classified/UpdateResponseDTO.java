@@ -11,4 +11,6 @@ public class UpdateResponseDTO {
   private String message;
 
   private String id;
+
+  private String slug;
 }

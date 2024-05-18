@@ -6,6 +6,7 @@ import com.apartment.house.dto.classified.CreateResponseDTO;
 import com.apartment.house.dto.classified.DeleteResponseDTO;
 import com.apartment.house.dto.classified.UpdateRequestDTO;
 import com.apartment.house.dto.classified.UpdateResponseDTO;
+import com.apartment.house.service.ClassifiedImageService;
 import com.apartment.house.service.ClassifiedService;
 import com.apartment.house.service.LoggerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +34,7 @@ public class ClassifiedController {
 
   private final ClassifiedService classifiedService;
   private final LoggerService loggerService;
+  private final ClassifiedImageService classifiedImageService;
 
   @SecurityRequirement(name = "bearerAuth")
   @Operation(summary = "Create", description = "Create a classified", tags = {
@@ -82,6 +84,8 @@ public class ClassifiedController {
   @SecurityRequirement(name = "bearerAuth")
   @DeleteMapping("/delete/image/{id}")
   public ResponseEntity<?> deleteImage(@PathVariable String id) {
+    classifiedImageService.findLastImageDelete(id);
+
     DeleteResponseDTO deleteResponseDTO = classifiedService.deleteImage(id);
     loggerService.logInfo(deleteResponseDTO.getId() + " => Image deleted");
 
@@ -117,6 +121,17 @@ public class ClassifiedController {
   @GetMapping("/user/{id}")
   public ResponseEntity<?> getClassifiedByUserId(@PathVariable String id) {
     List<ClassifiedDTO> classifieds = classifiedService.getClassifiedByUserId(id);
+    return ResponseEntity.ok(classifieds);
+  }
+
+  @Operation(summary = "Get Favorites By User Id", description = "Get classifieds favorites by user id", tags = {
+      "Classified"}, responses = {
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classifieds retrieved"),
+      @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
+  @SecurityRequirement(name = "bearerAuth")
+  @GetMapping("/favorite/{id}")
+  public ResponseEntity<?> getFavoriteClassifiedByUserId(@PathVariable String id) {
+    List<ClassifiedDTO> classifieds = classifiedService.getFavoriteClassifiedByUserId(id);
     return ResponseEntity.ok(classifieds);
   }
 }

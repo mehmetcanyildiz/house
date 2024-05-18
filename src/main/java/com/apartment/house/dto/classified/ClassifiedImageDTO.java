@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 public class ClassifiedImageDTO {
 
+  private String id;
+
   private String name;
 
   private String path;

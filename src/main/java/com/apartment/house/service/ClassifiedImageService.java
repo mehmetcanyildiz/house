@@ -21,7 +21,12 @@ public class ClassifiedImageService {
 
   public CreateImageResponseDTO uploadImages(CreateImageRequestDTO requestDTO) {
     List<ClassifiedImageModel> classifiedImages = new ArrayList<>();
-
+    if (requestDTO.getImages() == null || requestDTO.getImages().isEmpty()) {
+      CreateImageResponseDTO responseDTO = new CreateImageResponseDTO();
+      responseDTO.setStatus(true);
+      responseDTO.setMessage("Image upload is not found");
+      return responseDTO;
+    }
     requestDTO.getImages().forEach(image -> {
       String newFileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
 
@@ -53,6 +58,7 @@ public class ClassifiedImageService {
     classifiedImages.forEach(image -> {
       ClassifiedImageDTO classifiedImageDTO = new ClassifiedImageDTO();
 
+      classifiedImageDTO.setId(image.getId());
       classifiedImageDTO.setName(image.getName());
       classifiedImageDTO.setPath(image.getPath());
       classifiedImageDTO.setCreatedAt(image.getCreatedAt());
@@ -80,5 +86,25 @@ public class ClassifiedImageService {
 
     classifiedImage.setStatus(StatusEnum.DELETED);
     classifiedImageRepository.save(classifiedImage);
+  }
+
+  public ClassifiedImageModel findById(String id) {
+    return classifiedImageRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Image not found"));
+  }
+
+  public void findLastImageDelete(String id) {
+    ClassifiedImageModel classifiedImage = findById(id);
+    imageCountCheck(classifiedImage);
+  }
+
+  private void imageCountCheck(ClassifiedImageModel classifiedImage) {
+    ClassifiedModel classifiedModel = classifiedImage.getClassified();
+    List<ClassifiedImageModel> classifiedImages = classifiedImageRepository.findByClassified(
+        classifiedModel);
+
+    if (classifiedImages.size() == 1) {
+      throw new RuntimeException("You can not delete the last image");
+    }
   }
 }

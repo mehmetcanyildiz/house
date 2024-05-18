@@ -15,8 +15,10 @@ import com.apartment.house.enums.ClassifiedStatusEnum;
 import com.apartment.house.enums.EmailTemplateNameEnum;
 import com.apartment.house.enums.StatusEnum;
 import com.apartment.house.model.ClassifiedModel;
+import com.apartment.house.model.UserFavoriteModel;
 import com.apartment.house.model.UserModel;
 import com.apartment.house.repository.ClassifiedRepository;
+import com.apartment.house.repository.UserFavoriteRepository;
 import com.apartment.house.util.SlugUtil;
 import jakarta.mail.MessagingException;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class ClassifiedService {
   private final UserService userService;
   private final EmailService emailService;
   private final ApplicationConfig applicationConfig;
+  private final UserFavoriteRepository userFavoriteRepository;
 
   public CreateResponseDTO create(CreateRequestDTO requestDTO) throws MessagingException {
     ClassifiedModel classifiedModel = convertClassifiedModel(requestDTO, null);
@@ -72,14 +75,18 @@ public class ClassifiedService {
 
   private ClassifiedModel convertClassifiedModel(ClassifiedRequestDTO requestDTO,
       ClassifiedModel classifiedModel) {
-    if (classifiedModel == null) {
+    boolean isCreate = classifiedModel == null;
+    if (isCreate) {
       classifiedModel = new ClassifiedModel();
     }
 
     classifiedModel.setUser(authService.getAuthUser());
     classifiedModel.setTitle(requestDTO.getTitle());
-    classifiedModel.setSlug(
-        SlugUtil.toSlug(requestDTO.getTitle()) + "-" + System.currentTimeMillis());
+    if (isCreate) {
+      classifiedModel.setSlug(
+          SlugUtil.toSlug(requestDTO.getTitle()) + "-" + System.currentTimeMillis()
+      );
+    }
     classifiedModel.setDescription(requestDTO.getDescription());
     classifiedModel.setPrice(requestDTO.getPrice());
     classifiedModel.setType(requestDTO.getType());
@@ -99,7 +106,8 @@ public class ClassifiedService {
   }
 
   public ClassifiedDTO getClassifiedBySlug(String slug) {
-    ClassifiedModel classifiedModel = classifiedRepository.findBySlugAndStatus(slug, StatusEnum.ACTIVE)
+    ClassifiedModel classifiedModel = classifiedRepository.findBySlugAndStatus(
+            slug, StatusEnum.ACTIVE)
         .orElseThrow(() -> new RuntimeException("Classified not found"));
 
     return convertClassifiedDTO(classifiedModel);
@@ -204,6 +212,7 @@ public class ClassifiedService {
     CreateImageRequestDTO imageRequest = new CreateImageRequestDTO();
     imageRequest.setImages(requestDTO.getImages());
     imageRequest.setClassified(classifiedModel);
+
     CreateImageResponseDTO imageResponse = classifiedImageService.uploadImages(imageRequest);
 
     UpdateResponseDTO responseDTO = new UpdateResponseDTO();
@@ -217,6 +226,7 @@ public class ClassifiedService {
 
     responseDTO.setId(classifiedModel.getId());
     responseDTO.setStatus(true);
+    responseDTO.setSlug(classifiedModel.getSlug());
     responseDTO.setMessage("Classified updated successfully");
 
     return responseDTO;
@@ -224,6 +234,7 @@ public class ClassifiedService {
 
   public DeleteResponseDTO deleteImage(String id) {
     classifiedImageService.deleteImage(id);
+
     DeleteResponseDTO deleteResponseDTO = new DeleteResponseDTO();
     deleteResponseDTO.setStatus(true);
     deleteResponseDTO.setId(id);
@@ -235,5 +246,22 @@ public class ClassifiedService {
   public ClassifiedModel findClassifiedById(String classifiedId) {
     return classifiedRepository.findById(classifiedId)
         .orElseThrow(() -> new RuntimeException("Classified not found"));
+  }
+
+  public List<ClassifiedDTO> getFavoriteClassifiedByUserId(String id) {
+    UserModel user = userService.findUserById(id);
+    List<UserFavoriteModel> favorites = userFavoriteRepository.findByUser(user);
+
+    if (favorites.isEmpty()) {
+      throw new RuntimeException("Favorites not found");
+    }
+    List<ClassifiedDTO> classifiedDTO = new ArrayList<>();
+    favorites.forEach(favorite -> {
+      if (favorite.getClassified().getStatus() == StatusEnum.ACTIVE) {
+        classifiedDTO.add(convertClassifiedDTO(favorite.getClassified()));
+      }
+    });
+
+    return classifiedDTO;
   }
 }
