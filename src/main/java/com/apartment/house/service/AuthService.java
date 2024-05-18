@@ -92,7 +92,7 @@ public class AuthService {
     UserModel user = userService.register(registerDTO);
     sendValidationEmail(user);
     response.setStatus(true);
-    response.setMessage("User registered successfully");
+    response.setMessage("User registered successfully. Please check your email for activation link");
 
     return response;
   }

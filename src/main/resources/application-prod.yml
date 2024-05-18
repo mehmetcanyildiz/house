@@ -23,10 +23,10 @@ spring:
     hibernate:
       ddl-auto: update
   mail:
-    host: live.smtp.mailtrap.io
+    host: smtp.gmail.com
     port: 587
-    username: api
-    password: db2acb161d5f78c860e16da55901d57b
+    username: applicationhouse4@gmail.com
+    password: boyj manf avaw tslv
     properties:
       mail:
         smtp:
@@ -35,11 +35,11 @@ spring:
   mvc:
     static-path-pattern: /swagger*
 server:
-  port: 8090
+  port: 8080
 base:
   web:
     url: http://localhost:4200
-  url: http://localhost:8090
+  url: http://localhost:8080
 mail:
   from: hello@demomailtrap.com
 jwt:
