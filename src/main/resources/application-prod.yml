@@ -5,7 +5,7 @@ spring:
     activate:
       on-profile: test
   datasource:
-    url: postgres://u57vi4lmv32n8p:p7582a682a168800827d82bc4e3c00acc907875fe8a999676c34f2d3340065287@cb5ajfjosdpmil.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/ddgfdd3c7c4a
+    url: ${DATABASE_URL}
     username: u57vi4lmv32n8p
     password: p7582a682a168800827d82bc4e3c00acc907875fe8a999676c34f2d3340065287
   servlet:
