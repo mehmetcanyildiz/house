@@ -38,7 +38,7 @@ server:
   port: 8080
 base:
   web:
-    url: https://apartment-house-application.vercel.app
+    url: http://localhost:4200
   url: http://localhost:8080
 mail:
   from: hello@demomailtrap.com
