@@ -1,19 +1,25 @@
-FROM openjdk:17-jdk-alpine
+FROM maven:3.8.4-openjdk-17 AS build
 
-# Create user to run app as (instead of root)
-RUN addgroup -S app && adduser -S app -G app
-
-# User app
-USER app
-
-# Copy the jar file into the container
-COPY target/*.jar /app/app.jar
-
-# Set the working directory
 WORKDIR /app
 
-# Expose the port
+COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:17-jdk-alpine
+
+RUN addgroup -S app && adduser -S app -G app
+
+USER app
+
+COPY --from=build /app/target/*.jar /app/app.jar
+
+WORKDIR /app
+
 EXPOSE 8080
 
-# Run the jar file
 CMD ["java", "-jar", "/app/app.jar"]
