@@ -14,9 +14,9 @@ FROM openjdk:17-jdk-alpine
 
 RUN addgroup -S app && adduser -S app -G app
 
-USER app
+RUN mkdir -p /app/uploads && chown -R app:app /app
 
-RUN mkdir -p /app/uploads
+USER app
 
 COPY --from=build /app/target/*.jar /app/app.jar
 
