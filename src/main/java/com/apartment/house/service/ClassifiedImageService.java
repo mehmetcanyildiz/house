@@ -100,8 +100,8 @@ public class ClassifiedImageService {
 
   private void imageCountCheck(ClassifiedImageModel classifiedImage) {
     ClassifiedModel classifiedModel = classifiedImage.getClassified();
-    List<ClassifiedImageModel> classifiedImages = classifiedImageRepository.findByClassified(
-        classifiedModel);
+    List<ClassifiedImageModel> classifiedImages = classifiedImageRepository.findByClassifiedAndStatus(
+        classifiedModel, StatusEnum.ACTIVE);
 
     if (classifiedImages.size() == 1) {
       throw new RuntimeException("You can not delete the last image");
