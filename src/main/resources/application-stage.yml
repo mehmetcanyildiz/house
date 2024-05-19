@@ -3,7 +3,7 @@ spring:
     name: house
   config:
     activate:
-      on-profile: test
+      on-profile: stage
   datasource:
     url: jdbc:postgresql://db:5432/house_db
     username: postgres
