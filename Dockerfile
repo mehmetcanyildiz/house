@@ -12,11 +12,11 @@ RUN mvn clean package -DskipTests
 
 FROM openjdk:17-jdk-alpine
 
+RUN mkdir /app/uploads
+
 RUN addgroup -S app && adduser -S app -G app
 
 USER app
-
-RUN mkdir /app/uploads
 
 COPY --from=build /app/target/*.jar /app/app.jar
 
