@@ -27,11 +27,15 @@ import io.swagger.v3.oas.annotations.servers.Server;
     ),
     servers = {
         @Server(
+            url = "http://localhost:8099",
+            description = "Stage server"
+        ),
+        @Server(
             url = "http://localhost:8090",
             description = "Local server"
         ),
         @Server(
-            url = "https://apartment-house.herokuapp.com",
+            url = "https://house-application-2c2abb3720c7.herokuapp.com",
             description = "Production server"
         )
     },
