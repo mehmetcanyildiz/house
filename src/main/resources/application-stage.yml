@@ -38,7 +38,7 @@ server:
   port: 8080
 base:
   web:
-    url: http://localhost:4200
+    url: http://localhost:4299
   url: http://localhost:8099
 mail:
   from: hello@demomailtrap.com
