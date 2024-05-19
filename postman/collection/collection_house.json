@@ -1,0 +1,1574 @@
+{
+  "info": {
+    "_postman_id": "819116ef-693d-444d-93e2-b8bc6bddca32",
+    "name": "House Application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonData = pm.response.json();\r",
+                  "let token = jsonData.accessToken;\r",
+                  "pm.environment.set('access_token', token);",
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, error, and businessErrorDescription\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "    pm.expect(responseData).to.have.property('businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status is a boolean value\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error and businessErrorDescription are non-empty strings\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData.error).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Error should not be empty\");",
+                  "  pm.expect(responseData.businessErrorDescription).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Business error description should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "051dbce1-e9a3-4033-b386-f64809090d61",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"mail@example.com\",\r\n    \"password\": \"123123\",\r\n    \"re_password\": \"123123\",\r\n    \"firstname\": \"Mehmet\",\r\n    \"lastname\":\"Yıldız\",\r\n    \"phone\":\"5443181885\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/register",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "ae61b9dd-7ee0-426a-aefb-d00b00aa3988",
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "b301c31f-cd67-4940-aa03-32924bbca933",
+                "exec": [
+                  "let jsonData = pm.response.json();",
+                  "let token = jsonData.accessToken;",
+                  "pm.environment.set('access_token', token);",
+                  "",
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.include.all.keys('status', 'message', 'uid', 'email', 'firstName', 'lastName', 'phone', 'accessToken');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Email is in a valid format\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"First name and last name must be non-empty strings\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.firstName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"First name should not be empty\");",
+                  "    pm.expect(responseData.lastName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Last name should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Access token should not be empty\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(responseData.accessToken).to.exist.and.to.not.be.empty;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "id": "39c0849f-5afc-40be-b71f-429ed94c81c8",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"mail@example.com\",\r\n    \"password\": \"123123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/login",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status and error\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status is a boolean value\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error is an empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    pm.expect(responseData.error).to.equal(\"\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "ac8847fb-9c71-4c94-a758-3f7c6fd70a09",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzM4NCJ9.eyJmaXJzdE5hbWUiOiJNZWhtZXQiLCJlbWFpbCI6ImRyaXZlYXJzaXYwMDFAZ21haWwuY29tIiwibGFzdG5hbWUiOiJZxLFsZMSxeiIsInN1YiI6ImRyaXZlYXJzaXYwMDFAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOltdLCJpYXQiOjE3MTU2MDMyMDYsImV4cCI6MTcxNTYwNDA2Nn0.9LZizsVIbGserRb37ugfXk0AC7zYb8ZyywNm-_WciqK58riiuBdfy1aQNvqkbFc7",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzM4NCJ9.eyJmaXJzdE5hbWUiOiJNZWhtZXQiLCJlbWFpbCI6ImRyaXZlYXJzaXYwMDFAZ21haWwuY29tIiwibGFzdG5hbWUiOiJZxLFsZMSxeiIsInN1YiI6ImRyaXZlYXJzaXYwMDFAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOltdLCJpYXQiOjE3MTU4OTA3OTgsImV4cCI6MTcxNTk3Njc5OH0.EnWqdiSpCdEnmY0cbGCgWNhmemIhclZe7kRpZBHRpnp4h5f4BkqOVabkJSyagoxK\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/logout",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password Client",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "  pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, email, and message\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData).to.have.property('status');",
+                  "  pm.expect(responseData).to.have.property('email');",
+                  "  pm.expect(responseData).to.have.property('message');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Email is in a valid format\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.email).to.be.a('string');",
+                  "  pm.expect(responseData.email).to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Message is a non-empty string\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "0313a5ed-3001-46a1-a9dd-8affe45ae46d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"mail@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/password-reset-client",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "password-reset-client"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, error, and businessErrorDescription\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "    pm.expect(responseData).to.have.property('businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status should be a boolean value\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error and businessErrorDescription should be empty strings\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.error).to.be.a('string').and.to.be.empty;",
+                  "  pm.expect(responseData.businessErrorDescription).to.be.a('string').and.to.be.empty;",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "  pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "5757ad54-7704-4dfb-8ba1-9e36c5cd7571",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\":\"MDI2NzQyMDE=\",\r\n    \"password\":\"123456\",\r\n    \"re_password\":\"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/password-reset",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "password-reset"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, error, and businessErrorDescription\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "    pm.expect(responseData).to.have.property('businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status is a boolean value\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error and businessErrorDescription are non-empty strings\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData.error).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Error should not be empty\");",
+                  "  pm.expect(responseData.businessErrorDescription).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Business error description should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "9c986c3d-4ef0-4739-91e1-ce9740355d86",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"ODg2OTE3\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/activate-account",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "auth",
+                "activate-account"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "b63b79b6-342c-4cb2-bf82-59dfdb10d8b2"
+    },
+    {
+      "name": "Classified",
+      "item": [
+        {
+          "name": "Create",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, slug, message, and id\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('slug');",
+                  "    pm.expect(responseData).to.have.property('message');",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Slug is a non-empty string\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData.slug).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Slug should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"ID is a non-empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "",
+                  "    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ID should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "1accd592-fa57-4329-a43c-915c9863afb1",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "test",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "<p style=\"text-align:center\"><b><font color=\"#ff0000\"><u>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AGRİLİA GAYRİMENKUL&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</u></font></b></p>\n<p style=\"text-align:center\"><b>ALAÇATIDA BULUNAN TÜM EĞLENCE VE ALIŞVERİŞ MERKEZLERİNE YÜRÜME MESAFESİNDEDİR.</b></p>\n<p style=\"text-align:center\">300 M2 ARSA İÇERİSİNDE&nbsp;</p>\n<p style=\"text-align:center\">140 M2 KULLANIM ALANI&nbsp;</p>\n<p style=\"text-align:center\">3 ODA HER ODASI KENDİNE AİT BANYOLU&nbsp;</p>\n<p style=\"text-align:center\">TEMİZ YENİ EŞYALI FERAH&nbsp;</p>\n<p style=\"text-align:center\">MÜSTAKİL HAVUZLU ETARFI İZOLE BAHÇE İÇERİSİNDE&nbsp;</p>\n<p style=\"text-align:center\">YÜKSEK AHŞAP TAVANLI&nbsp;</p>\n<p style=\"text-align:center\">HER ODASI KLİMALI&ZeroWidthSpace;</p>\n<p style=\"text-align:center\">HAZİRAN -TEMMUZ-AĞUSTOS-EYLÜL 15 TARİHLERİ İÇİN GEÇERLİ OLAN FİYATTIR.</p>\n<p><br></p>\n<p><br></p>\n<p style=\"color:rgb( 0 , 0 , 0 );font-size:14px;text-align:center\"><b>&ZeroWidthSpace;&ZeroWidthSpace;TAŞINMAZ TİCARETİ HAKKINDA YÖNETMELİK UYARINCA</b></p>\n<p style=\"color:rgb( 0 , 0 , 0 );font-size:14px;text-align:center\"><font face=\"arial black, sans-serif\"><b>AGRİLİA GAYRİMENKUL BELGE YETKİ NO:3502094</b></font></p>\n<p><br></p>\n<p><br></p>\n<p style=\"text-align:center\"><br></p>\n",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "14.356",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "RENT",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "HOUSE",
+                  "type": "text"
+                },
+                {
+                  "key": "roomNumber",
+                  "value": "3",
+                  "type": "text"
+                },
+                {
+                  "key": "livingRoomNumber",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "grossArea",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "netArea",
+                  "value": "135",
+                  "type": "text"
+                },
+                {
+                  "key": "buildingAge",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "floorLocation",
+                  "value": "8",
+                  "type": "text"
+                },
+                {
+                  "key": "totalFloor",
+                  "value": "44",
+                  "type": "text"
+                },
+                {
+                  "key": "isFurnished",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "fileNotInWorkingDirectoryWarning": "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+                  "filesNotInWorkingDirectory": [
+                    "/C:/Users/cande/OneDrive/Masaüstü/ev/x5_1157629175b0e.jpg",
+                    "/C:/Users/cande/OneDrive/Masaüstü/ev/x5_1157629175p2y.jpg",
+                    "/C:/Users/cande/OneDrive/Masaüstü/ev/x5_1157629175xmp.jpg",
+                    "/C:/Users/cande/OneDrive/Masaüstü/ev/x5_11576291752kx.jpg",
+                    "/C:/Users/cande/OneDrive/Masaüstü/ev/x5_11576291758rs.jpg"
+                  ],
+                  "src": [
+                    "postman-cloud:///1ef11efe-d395-4c30-b791-10ab5429b7df",
+                    "postman-cloud:///1ef11efe-d403-4a00-9a75-b82662b34964",
+                    "postman-cloud:///1ef11efe-d3a6-4da0-90fe-e8b3b2ab84c5",
+                    "postman-cloud:///1ef11efe-d331-4aa0-9e55-96194f6bc22e",
+                    "postman-cloud:///1ef11efe-d387-41d0-ba84-303e1b2dc2e0"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{api_url}}/classified/create",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response is in JSON format\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status field is present and has a boolean value\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.have.property('status').that.is.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error field is present and is a non-empty string\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData).to.be.an('object');",
+                  "  pm.expect(responseData.error).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Error field should be a non-empty string\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"BusinessErrorDescription field is present and is an empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.businessErrorDescription).to.exist;",
+                  "    pm.expect(responseData.businessErrorDescription).to.be.an('string');",
+                  "    pm.expect(responseData.businessErrorDescription).to.equal(\"\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "69f1daf6-a89f-41fd-9120-1f08afa9a024",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "test 2",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "<p style=\"text-align:center\"><b><font color=\"#ff0000\"><u>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;AGRİLİA GAYRİMENKUL&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</u></font></b></p>\n<p style=\"text-align:center\"><b>ALAÇATIDA BULUNAN TÜM EĞLENCE VE ALIŞVERİŞ MERKEZLERİNE YÜRÜME MESAFESİNDEDİR.</b></p>\n<p style=\"text-align:center\">300 M2 ARSA İÇERİSİNDE&nbsp;</p>\n<p style=\"text-align:center\">140 M2 KULLANIM ALANI&nbsp;</p>\n<p style=\"text-align:center\">3 ODA HER ODASI KENDİNE AİT BANYOLU&nbsp;</p>\n<p style=\"text-align:center\">TEMİZ YENİ EŞYALI FERAH&nbsp;</p>\n<p style=\"text-align:center\">MÜSTAKİL HAVUZLU ETARFI İZOLE BAHÇE İÇERİSİNDE&nbsp;</p>\n<p style=\"text-align:center\">YÜKSEK AHŞAP TAVANLI&nbsp;</p>\n<p style=\"text-align:center\">HER ODASI KLİMALI&ZeroWidthSpace;</p>\n<p style=\"text-align:center\">HAZİRAN -TEMMUZ-AĞUSTOS-EYLÜL 15 TARİHLERİ İÇİN GEÇERLİ OLAN FİYATTIR.</p>\n<p><br></p>\n<p><br></p>\n<p style=\"color:rgb( 0 , 0 , 0 );font-size:14px;text-align:center\"><b>&ZeroWidthSpace;&ZeroWidthSpace;TAŞINMAZ TİCARETİ HAKKINDA YÖNETMELİK UYARINCA</b></p>\n<p style=\"color:rgb( 0 , 0 , 0 );font-size:14px;text-align:center\"><font face=\"arial black, sans-serif\"><b>AGRİLİA GAYRİMENKUL BELGE YETKİ NO:3502094</b></font></p>\n<p><br></p>\n<p><br></p>\n<p style=\"text-align:center\"><br></p>\n",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "14.356",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "RENT",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "HOUSE",
+                  "type": "text"
+                },
+                {
+                  "key": "roomNumber",
+                  "value": "3",
+                  "type": "text"
+                },
+                {
+                  "key": "livingRoomNumber",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "grossArea",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "netArea",
+                  "value": "135",
+                  "type": "text"
+                },
+                {
+                  "key": "buildingAge",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "floorLocation",
+                  "value": "8",
+                  "type": "text"
+                },
+                {
+                  "key": "totalFloor",
+                  "value": "44",
+                  "type": "text"
+                },
+                {
+                  "key": "isFurnished",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "classifiedStatus",
+                  "value": "ACTIVE",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": "postman-cloud:///1ef11efe-d395-4c30-b791-10ab5429b7df"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{api_url}}/classified/update/c7c20e87-36b5-4cdf-a244-2a7877baaf7d",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "update",
+                "c7c20e87-36b5-4cdf-a244-2a7877baaf7d"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "    pm.expect(responseData).to.have.property('businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error field is empty when status is true\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.status).to.equal(true);",
+                  "    pm.expect(responseData.error).to.be.empty;",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Verify the request URL contains the correct classified ID\", function () {",
+                  "    pm.expect(pm.request.url).to.include(\"31bb1e4c-7718-48e9-9902-f609e899de5b\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "0df0dc46-74f7-4a27-8390-6718a8df3b17",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/delete/31bb1e4c-7718-48e9-9902-f609e899de5b",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "delete",
+                "31bb1e4c-7718-48e9-9902-f609e899de5b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Image",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, error, and businessErrorDescription\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.include.all.keys('status', 'error', 'businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error field is empty when status is true\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.status).to.equal(true);",
+                  "    pm.expect(responseData.error).to.be.empty;",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Validate the UUID format of the image in the request URL\", function () {",
+                  "  const url = pm.request.url.toString();",
+                  "  const uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;",
+                  "  ",
+                  "  pm.expect(url).to.match(uuidRegex);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "d2116eca-507b-4b35-b1a6-fcebb3db8972",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/delete/image/eecc1189-9cdb-43b6-987b-9c362640d39e",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "delete",
+                "image",
+                "eecc1189-9cdb-43b6-987b-9c362640d39e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "    pm.expect(responseData).to.have.property('title');",
+                  "    pm.expect(responseData).to.have.property('slug');",
+                  "    pm.expect(responseData).to.have.property('description');",
+                  "    pm.expect(responseData).to.have.property('price');",
+                  "    pm.expect(responseData).to.have.property('type');",
+                  "    pm.expect(responseData).to.have.property('category');",
+                  "    pm.expect(responseData).to.have.property('roomNumber');",
+                  "    pm.expect(responseData).to.have.property('livingRoomNumber');",
+                  "    pm.expect(responseData).to.have.property('grossArea');",
+                  "    pm.expect(responseData).to.have.property('netArea');",
+                  "    pm.expect(responseData).to.have.property('buildingAge');",
+                  "    pm.expect(responseData).to.have.property('floorLocation');",
+                  "    pm.expect(responseData).to.have.property('totalFloor');",
+                  "    pm.expect(responseData).to.have.property('isFurnished');",
+                  "    pm.expect(responseData).to.have.property('isFavorite');",
+                  "    pm.expect(responseData).to.have.property('classifiedStatus');",
+                  "    pm.expect(responseData).to.have.property('user');",
+                  "    pm.expect(responseData).to.have.property('images');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Email in user object is in a valid format\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.user).to.exist.and.to.be.an('object');",
+                  "    pm.expect(responseData.user.email).to.match(/^.+@.+\\..+$/);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Images array is present and has expected number of elements\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.have.property('images').that.is.an('array');",
+                  "    pm.expect(responseData.images).to.have.lengthOf.at.least(1);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Image paths in the 'images' array are not empty\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.images).to.be.an('array');",
+                  "    responseData.images.forEach(function(image) {",
+                  "        pm.expect(image.path).to.exist.and.to.have.lengthOf.at.least(1, \"Image path should not be empty\");",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "5abdefe0-66ea-406a-86f4-40fab2a4902a",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/get/test-1716078143010",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "get",
+                "test-1716078143010"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    ",
+                  "    responseData.forEach(function(item) {",
+                  "        pm.expect(item).to.have.property('id');",
+                  "        pm.expect(item).to.have.property('title');",
+                  "        pm.expect(item).to.have.property('slug');",
+                  "        pm.expect(item).to.have.property('description');",
+                  "        pm.expect(item).to.have.property('price');",
+                  "        pm.expect(item).to.have.property('type');",
+                  "        pm.expect(item).to.have.property('category');",
+                  "        pm.expect(item).to.have.property('roomNumber');",
+                  "        pm.expect(item).to.have.property('livingRoomNumber');",
+                  "        pm.expect(item).to.have.property('grossArea');",
+                  "        pm.expect(item).to.have.property('netArea');",
+                  "        pm.expect(item).to.have.property('buildingAge');",
+                  "        pm.expect(item).to.have.property('floorLocation');",
+                  "        pm.expect(item).to.have.property('totalFloor');",
+                  "        pm.expect(item).to.have.property('isFurnished');",
+                  "        pm.expect(item).to.have.property('isFavorite');",
+                  "        pm.expect(item).to.have.property('classifiedStatus');",
+                  "        pm.expect(item).to.have.property('user');",
+                  "        pm.expect(item).to.have.property('images');",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Phone number in user object is in a valid format\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+                  "    responseData.forEach(function(classified) {",
+                  "        pm.expect(classified.user).to.exist.and.to.be.an('object');",
+                  "        pm.expect(classified.user.phone).to.match(/^\\d{10}$/);",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Images array is present and contains expected number of elements\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    pm.expect(responseData).to.have.property('images');",
+                  "    pm.expect(responseData.images).to.be.an('array').and.to.have.lengthOf.at.least(1);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Name in images array is a non-empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    responseData.forEach(function(item) {",
+                  "        pm.expect(item.images).to.be.an('array');",
+                  "        item.images.forEach(function(image) {",
+                  "            pm.expect(image.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+                  "        });",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "549ba17a-07a3-49f4-99f6-cc0d36eac046",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/all",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Classifieds",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "  pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    ",
+                  "    responseData.forEach(function(item) {",
+                  "        pm.expect(item).to.include.all.keys(",
+                  "            'id', 'title', 'slug', 'description', 'price', 'type', 'category', 'roomNumber', ",
+                  "            'livingRoomNumber', 'grossArea', 'netArea', 'buildingAge', 'floorLocation', 'totalFloor', ",
+                  "            'isFurnished', 'isFavorite', 'classifiedStatus', 'user', 'images'",
+                  "        );",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Phone and email in user object are in valid formats\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    responseData.forEach(function(classified) {",
+                  "        pm.expect(classified.user).to.be.an('object');",
+                  "        pm.expect(classified.user.phone).to.match(/^\\d{10}$/); // Phone format validation",
+                  "        pm.expect(classified.user.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/); // Email format validation",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Images array is present and contains expected number of elements\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "    responseData.forEach(function(item) {",
+                  "        pm.expect(item.images).to.exist;",
+                  "        pm.expect(item.images).to.be.an('array');",
+                  "        pm.expect(item.images).to.have.lengthOf.at.least(1);",
+                  "    });",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Name in images is a non-empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "",
+                  "    responseData.forEach(function(classified) {",
+                  "        classified.images.forEach(function(image) {",
+                  "            pm.expect(image.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");",
+                  "        });",
+                  "    });",
+                  "});",
+                  "pm.test(\"Path in images is a non-empty string\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('array');",
+                  "",
+                  "    responseData.forEach(function(classified) {",
+                  "        classified.images.forEach(function(image) {",
+                  "            pm.expect(image.path).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Path should not be empty\");",
+                  "        });",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "27a0a8b9-df56-4c88-9870-c4acadbfcc24",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/user",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Favorite Classifieds",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.include.all.keys('status', 'error', 'businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status field should be boolean\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error and businessErrorDescription should be empty strings\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData.error).to.be.a('string').and.to.be.empty;",
+                  "    pm.expect(responseData.businessErrorDescription).to.be.a('string').and.to.be.empty;",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "aa53a7d7-6cac-456b-a315-db7a02c527e5",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/classified/favorite",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "classified",
+                "favorite"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "7217970e-df81-4d95-9b92-96399cd434b9"
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, message, and id\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('message');",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status is a boolean value\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Message is a non-empty string\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Id is present and in a valid format\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.have.property('id');",
+                  "    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "8b1873ee-fa71-48af-a8ec-f6068f12ec9b",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstname\":\"Mehmet\",\r\n    \"lastname\":\"Yıldız\",\r\n    \"phone\":\"5443181885\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/user/update",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "user",
+                "update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Favorite Add",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status, error, and businessErrorDescription\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('error');",
+                  "    pm.expect(responseData).to.have.property('businessErrorDescription');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Error message is not empty\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "",
+                  "  pm.expect(responseData.error).to.not.be.empty;",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Business error description is empty\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.businessErrorDescription).to.equal(\"\");",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "93d9e599-8c4a-4713-9153-52d547d1fde3",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"classifiedId\": \"ac290eb2-c221-467b-a2c2-6dd66d645d14\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/user/favorite/add",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "user",
+                "favorite",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Favorite Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response status code is 400\", function () {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Response has the required fields - status and validationErrors\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.property('status');",
+                  "    pm.expect(responseData).to.have.property('validationErrors');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"ValidationErrors is an array\", function () {",
+                  "  const responseData = pm.response.json();",
+                  "  ",
+                  "  pm.expect(responseData.validationErrors).to.be.an('array');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Status field is boolean\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.status).to.be.a('boolean');",
+                  "});",
+                  "",
+                  "",
+                  "pm.test(\"Content-Type header is application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "id": "ca0cd0e9-9bfa-4ff0-81dc-cf5bcedb00d7",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\":\"ca294fe0-9930-4abb-a2c1-d2302b6b888d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_url}}/user/favorite/delete",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "user",
+                "favorite",
+                "delete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "id": "c0b47618-c6c8-42ea-864e-f0498e841932"
+    }
+  ]
+}

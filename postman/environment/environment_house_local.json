@@ -1,0 +1,18 @@
+{
+  "id": "1a25019d-d7ef-47e5-9ad4-fc7429cabd26",
+  "name": "House Local",
+  "values": [
+    {
+      "key": "api_url",
+      "value": "http://localhost:8090/api",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "enabled": true,
+      "type": "default"
+    }
+  ]
+}
