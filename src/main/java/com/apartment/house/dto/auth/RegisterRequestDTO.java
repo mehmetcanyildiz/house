@@ -36,7 +36,7 @@ public class RegisterRequestDTO {
   @Size(min = 2, message = "Lastname must be at least 2 characters")
   private String lastname;
 
-  @Size(min = 10,max = 10, message = "Phone must be 10 characters")
+  @Size(min = 10, max = 10, message = "Phone must be 10 characters")
   @NotEmpty(message = "Phone is required")
   @NotBlank(message = "Phone is required")
   private String phone;

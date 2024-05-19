@@ -6,6 +6,8 @@ import com.apartment.house.dto.classified.CreateResponseDTO;
 import com.apartment.house.dto.classified.DeleteResponseDTO;
 import com.apartment.house.dto.classified.UpdateRequestDTO;
 import com.apartment.house.dto.classified.UpdateResponseDTO;
+import com.apartment.house.model.UserModel;
+import com.apartment.house.service.AuthService;
 import com.apartment.house.service.ClassifiedImageService;
 import com.apartment.house.service.ClassifiedService;
 import com.apartment.house.service.LoggerService;
@@ -35,6 +37,7 @@ public class ClassifiedController {
   private final ClassifiedService classifiedService;
   private final LoggerService loggerService;
   private final ClassifiedImageService classifiedImageService;
+  private final AuthService authService;
 
   @SecurityRequirement(name = "bearerAuth")
   @Operation(summary = "Create", description = "Create a classified", tags = {
@@ -118,9 +121,10 @@ public class ClassifiedController {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classifieds retrieved"),
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @SecurityRequirement(name = "bearerAuth")
-  @GetMapping("/user/{id}")
-  public ResponseEntity<?> getClassifiedByUserId(@PathVariable String id) {
-    List<ClassifiedDTO> classifieds = classifiedService.getClassifiedByUserId(id);
+  @GetMapping("/user")
+  public ResponseEntity<?> getClassifiedByUserId() {
+    UserModel user = authService.getAuthUser();
+    List<ClassifiedDTO> classifieds = classifiedService.getClassifiedByUserId(user.getId());
     return ResponseEntity.ok(classifieds);
   }
 
@@ -129,9 +133,10 @@ public class ClassifiedController {
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Classifieds retrieved"),
       @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Bad request")})
   @SecurityRequirement(name = "bearerAuth")
-  @GetMapping("/favorite/{id}")
-  public ResponseEntity<?> getFavoriteClassifiedByUserId(@PathVariable String id) {
-    List<ClassifiedDTO> classifieds = classifiedService.getFavoriteClassifiedByUserId(id);
+  @GetMapping("/favorite")
+  public ResponseEntity<?> getFavoriteClassifiedByUserId() {
+    UserModel user = authService.getAuthUser();
+    List<ClassifiedDTO> classifieds = classifiedService.getFavoriteClassifiedByUserId(user.getId());
     return ResponseEntity.ok(classifieds);
   }
 }

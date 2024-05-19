@@ -92,7 +92,8 @@ public class AuthService {
     UserModel user = userService.register(registerDTO);
     sendValidationEmail(user);
     response.setStatus(true);
-    response.setMessage("User registered successfully. Please check your email for activation link");
+    response.setMessage(
+        "User registered successfully. Please check your email for activation link");
 
     return response;
   }
@@ -180,7 +181,8 @@ public class AuthService {
 
     var newToken = generateAndSaveActivationToken(user, TokenTypeEnum.ACTIVATION, 6);
     var encodedToken = tokenService.encodeBase64((String) newToken);
-    var activationUrl = applicationConfig.baseWebUrl + "/auth/activate-account?token=" + encodedToken;
+    var activationUrl =
+        applicationConfig.baseWebUrl + "/auth/activate-account?token=" + encodedToken;
 
     emailService.sendEmail(user.getEmail(), user.getFirstName(),
                            EmailTemplateNameEnum.ACTIVATION_EMAIL, activationUrl, (String) newToken,

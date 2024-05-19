@@ -61,7 +61,7 @@ public class UserController {
       throws MessagingException {
     UserModel user = authService.getAuthUser();
     ClassifiedModel classified = classifiedService.findClassifiedById(requestDTO.getClassifiedId());
-    if(userService.isFavorite(user, classified)){
+    if (userService.isFavorite(user, classified)) {
       return ResponseEntity.badRequest().body("Already added to favorites");
     }
     UserFavoriteResponseDTO response = userService.addFavorite(user, classified);
