@@ -1,6 +1,6 @@
 # Apartment House Application (Backend)
 
-
+Daha fazla bilgi almak ve videolu anlatım için [Dökümantasyon](https://docs.google.com/document/d/145fFq26fFDDY66AfRr_GZQFYlj1ixM7VCytUoImeVkg) üzerinden inceleyebilirsiniz.
 
 ## Gereksinimler
 
